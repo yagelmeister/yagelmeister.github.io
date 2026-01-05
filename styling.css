@@ -151,6 +151,16 @@ header{
   font-size: clamp(24px, 3vw, 32px);
 }
 
+.name a{
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.name a:hover{
+  opacity: 0.7;
+}
+
 .rule{
   border-top: 1px solid var(--softline);
   margin-top: 8px;
@@ -224,6 +234,12 @@ header{
         margin-bottom:12px;
         border:1px solid var(--softline);
     }
+
+    /* video-fix */
+  .card-image video,
+  video.card-image{
+    background: transparent;
+  }
 
 /* onderaan cv/contact */
 footer{
