@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yagel.nl – cv</title>
+  <meta name="description" content="CV / Resume – YA'GEL SCHOONDERBEEK" />
+
+  <!-- shared styling -->
+  <link rel="stylesheet" href="styling.css" />
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* CV layout: mosaic grid like yak/mps, but tuned for text */
+    main.grid.cv{
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-flow: dense;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* cards with lots of text */
+    .card.cvblock{
+      justify-content:flex-start;
+      min-height: 0;
+    }
+
+    .cv-title{
+      font-family: var(--font-head);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .cv-sub{
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      margin-bottom: 12px;
+    }
+
+    .cv-text{
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .cv-list{
+      margin: 0;
+      padding-left: 16px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .cv-list li{ margin: 6px 0; }
+
+    .cv-item{
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--softline);
+    }
+    .cv-item:first-child{
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .cv-item-head{
+      display:flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+    .cv-role{
+      font-family: var(--font-head);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 14px;
+      margin: 0;
+    }
+    .cv-dates{
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .cv-org{
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      margin: 6px 0 0;
+      white-space: pre-line;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .tag{
+      display:inline-block;
+      border: 1px solid var(--softline);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      text-transform: none;
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .contact-row{
+      padding-top: 10px;
+      border-top: 1px solid var(--softline);
+    }
+    .contact-row:first-child{
+      padding-top: 0;
+      border-top: 0;
+    }
+    .contact-k{
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .contact-v{
+      font-family: var(--font-body);
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .social-link{
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+    .social-link:hover{
+      border-bottom-color: var(--line);
+      opacity: 0.85;
+    }
+
+    /* responsive: collapse to 1 column like the other pages */
+    @media (max-width: 760px){
+      main.grid.cv{ grid-template-columns: 1fr; }
+      .span-2, .span-3, .span-4, .row-1, .row-2{ grid-column: auto; grid-row: auto; }
+      .cv-item-head{ justify-content: flex-start; }
+      .cv-dates{ white-space: normal; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar" aria-label="Taal kiezen">
+        <button class="lang-btn" type="button" data-lang="nl" aria-pressed="true">nl</button>
+        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">en</button>
+      </div>
+
+      <div class="name">
+        <a href="home.html" data-i18n="name">YA'GEL SCHOONDERBEEK</a>
+      </div>
+      <div class="rule"></div>
+    </header>
+
+    <main class="grid cv" aria-label="CV">
+      <!-- PROFILE -->
+      <div class="card cvblock tilt-1 span-4 row-1">
+        <div>
+          <div class="cv-title" data-i18n="profile_title">PROFIEL</div>
+          <div class="cv-sub" data-i18n="profile_sub">korte intro</div>
+          <p class="cv-text" data-i18n="profile_text">
+            Sociaal actieve vrijwilligerschef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.
+          </p>
+        </div>
+      </div>
+
+      <div class="card cvblock tilt-1 span-4 row-1">
+        <div>
+          <div class="cv-item" style="margin-top:14px;">
+            <div class="cv-title" data-i18n="experience_title">ERVARING</div>
+            <div class="cv-sub" data-i18n="experience_sub">rollen en projecten</div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp1_role">Vrijwilligerschef</p>
+                <p class="cv-dates" data-i18n="exp1_dates">2023 – 2025</p>
+              </div>
+              <p class="cv-org" data-i18n="exp1_org">Daklozenopvang De Kloof en Testtafel.</p>
+              <p class="cv-text" data-i18n="exp1_text">
+                Wekelijks zelfstandig maaltijden bereiden voor daklozen bij de Kloof en ondersteunend werk bij het fine-dining menu van Testtafel. Ook af en toe op festivals.
+              </p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp2_role">DJ en evenementen organisator</p>
+                <p class="cv-dates" data-i18n="exp2_dates">2022 – 2025</p>
+              </div>
+              <p class="cv-org" data-i18n="exp2_org">zzp</p>
+              <p class="cv-text" data-i18n="exp2_text">
+                Optredens bij verschillende radios, clubs en festivals, o.a. Radio Radio, Radio TNP, Kanaal40 en Landjuweel Festival. Mede-oprichter van mpsoundsystem, een collectief dat allerlei gratis (muziek)evenementen organiseert.
+              </p>
+            </div>
+
+            <div class="cv-item" id="exp3_optional_en" style="display:none;">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp3_role">Live sound engineer & studio host</p>
+                <p class="cv-dates" data-i18n="exp3_dates">2021 – 2025</p>
+              </div>
+              <p class="cv-org" data-i18n="exp3_org">Freelance/volunteer</p>
+              <p class="cv-text" data-i18n="exp3_text">
+                Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.
+              </p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp4_role">Data Scientist</p>
+                <p class="cv-dates" data-i18n="exp4_dates">2021 – 2025</p>
+              </div>
+              <p class="cv-org" data-i18n="exp4_org">AFC Ajax en NIDAP, Amsterdam.</p>
+              <p class="cv-text" data-i18n="exp4_text">
+                Verantwoordelijk voor o.a. data analyses van de beweging van spelers en de banen- en educatie markt.
+              </p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp5_role">Filmtheater Kriterion</p>
+                <p class="cv-dates" data-i18n="exp5_dates">2017 – 2022</p>
+              </div>
+              <p class="cv-org" data-i18n="exp5_org">Amsterdam.</p>
+              <p class="cv-text" data-i18n="exp5_text">
+                Standaard bar- en keukenwerk. Daarnaast verschillende posities over tijd, zoals bestuurslid en coördinator van het sollicitatieproces, de PR en live-muziek.
+              </p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="exp6_role">Werkstudent</p>
+                <p class="cv-dates" data-i18n="exp6_dates">2018 – 2019</p>
+              </div>
+              <p class="cv-org" data-i18n="exp6_org">Deloitte, Amsterdam.</p>
+              <p class="cv-text" data-i18n="exp6_text">
+                Aandeel in projecten van cyber risk quantification.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="card cvblock tilt-2 span-2 row-2">
+        <div>
+          <div class="cv-title" data-i18n="sidebar_title">CONTACT DETAILS</div>
+          <div class="cv-sub" data-i18n="sidebar_sub">contact, skills, interests</div>
+
+          <div class="contact-grid">
+            <div class="contact-row">
+              <div class="contact-k" data-i18n="c_phone_k">Telefoon</div>
+              <p class="contact-v" data-i18n="c_phone_v">+31 6 24 93 63 58</p>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-k" data-i18n="c_mail_k">Mail</div>
+              <p class="contact-v">
+                <a href="#" id="mailInline" class="social-link" data-i18n="c_mail_v">yagelschoonderbeek@gmail.com</a>
+              </p>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-k" data-i18n="c_addr_k">Adres</div>
+              <p class="contact-v" data-i18n="c_addr_v">Bloemgracht 180<br>1015TV, Amsterdam</p>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-k" data-i18n="c_socials_k">Socials</div>
+              <p class="contact-v">
+                <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noreferrer" data-i18n="c_ig">Instagram</a><br>
+                <a class="social-link" href="https://soundcloud.com/" target="_blank" rel="noreferrer" data-i18n="c_sc">Soundcloud</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card cvblock tilt-2 span-2 row-2">
+        <div>
+          <div class="cv-item" style="margin-top:14px;">
+            <div class="cv-title" data-i18n="skills_title">SKILLS</div>
+            <div class="cv-sub" data-i18n="skills_sub">korte lijst</div>
+            <div class="pill-row">
+              <span class="tag" data-i18n="skill1">planning & organisatie</span>
+              <span class="tag" data-i18n="skill2">snelle leerling</span>
+              <span class="tag" data-i18n="skill3">verantwoordelijkheidsgevoel</span>
+              <span class="tag" data-i18n="skill4">technisch onderlegd</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card cvblock tilt-2 span-2 row-2">
+        <div>
+          <div class="cv-item" style="margin-top:14px;">
+            <div class="cv-title" data-i18n="interests_title">INTERESSES</div>
+            <div class="cv-sub" data-i18n="interests_sub">waar ik van aan ga</div>
+            <div class="pill-row" id="interestsPills">
+              <span class="tag" data-i18n="int1">bakken en koken</span>
+              <span class="tag" data-i18n="int2">muziek</span>
+              <span class="tag" data-i18n="int3">voetbal</span>
+              <span class="tag" data-i18n="int4">boulderen</span>
+              <span class="tag" data-i18n="int5">drummen</span>
+              <span class="tag" data-i18n="int6">film en fotografie</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="card cvblock tilt-3 span-4 row-2">
+        <div>
+          <div class="cv-title" data-i18n="edu_title">EDUCATIE</div>
+          <div class="cv-sub" data-i18n="edu_sub">opleidingen</div>
+
+          <div class="cv-item">
+            <div class="cv-item-head">
+              <p class="cv-role" data-i18n="edu1_role">Computational Science, MSc.</p>
+              <p class="cv-dates" data-i18n="edu1_dates">2019 – 2021</p>
+            </div>
+            <p class="cv-org" data-i18n="edu1_org">Universiteit van Amsterdam</p>
+            <p class="cv-text" data-i18n="edu1_text">Thesis at AFC Ajax, cum Laude. GPA: 8.6.</p>
+          </div>
+
+          <div class="cv-item">
+            <div class="cv-item-head">
+              <p class="cv-role" data-i18n="edu2_role">Natuur- & Sterrenkunde, BSc.</p>
+              <p class="cv-dates" data-i18n="edu2_dates">2014 – 2017</p>
+            </div>
+            <p class="cv-org" data-i18n="edu2_org">Universiteit van Amsterdam</p>
+            <p class="cv-text" data-i18n="edu2_text">BSc: Honours, University of Edinburgh uitwisseling, cum Laude. GPA 8.1.</p>
+          </div>
+
+          <div class="cv-item">
+            <div class="cv-item-head">
+              <p class="cv-role" data-i18n="edu3_role">Natuur- & Sterrenkunde, MSc. (eerste helft)</p>
+              <p class="cv-dates" data-i18n="edu3_dates">2021 – 2022</p>
+            </div>
+            <p class="cv-org" data-i18n="edu3_org">Universiteit van Amsterdam</p>
+            <p class="cv-text" data-i18n="edu3_text">MSc: Eerste helft van het programma. Track: GRAPPA. GPA: 8.7.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <a class="pill" href="home.html" data-i18n="pill_home">HOME</a>
+      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+    </footer>
+  </div>
+
+  <script>
+    // theme (same as the rest)
+    (function(){
+      var savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme || "auto");
+    })();
+  </script>
+
+  <script>
+    // language (nl/en)
+    (function(){
+      var dict = {
+        nl: {
+          name: "YA'GEL SCHOONDERBEEK",
+
+          profile_title: "PROFIEL",
+          profile_sub: "korte intro",
+          profile_text: "Sociaal actieve vrijwilligerschef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.",
+
+          experience_title: "ERVARING",
+          experience_sub: "rollen en projecten",
+
+          exp1_role: "Vrijwilligerschef",
+          exp1_dates: "2023 – 2025",
+          exp1_org: "Daklozenopvang De Kloof en Testtafel.",
+          exp1_text: "Wekelijks zelfstandig maaltijden bereiden voor daklozen bij de Kloof en ondersteunend werk bij het fine-dining menu van Testtafel. Ook af en toe op festivals.",
+
+          exp2_role: "DJ en evenementen organisator",
+          exp2_dates: "2022 – 2025",
+          exp2_org: "zzp.",
+          exp2_text: "Optredens bij verschillende radios, clubs en festivals, o.a. Radio Radio, Radio TNP, Kanaal40 en Landjuweel Festival. Mede-oprichter van mpsoundsystem, een collectief dat allerlei gratis (muziek)evenementen organiseert.",
+
+          // English-only role hidden in NL view (kept for completeness)
+          exp3_role: "Live sound engineer & studio host",
+          exp3_dates: "2021 – 2025",
+          exp3_org: "Freelance/volunteer.",
+          exp3_text: "Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.",
+
+          exp4_role: "Data Scientist",
+          exp4_dates: "2021 – 2025",
+          exp4_org: "AFC Ajax en NIDAP, Amsterdam.",
+          exp4_text: "Verantwoordelijk voor o.a. data analyses van de beweging van spelers en de banen- en educatie markt.",
+
+          exp5_role: "Filmtheater Kriterion",
+          exp5_dates: "2017 – 2022",
+          exp5_org: "Amsterdam.",
+          exp5_text: "Standaard bar- en keukenwerk. Daarnaast verschillende posities over tijd, zoals bestuurslid en coördinator van het sollicitatieproces, de PR en live-muziek.",
+
+          exp6_role: "Werkstudent",
+          exp6_dates: "2018 – 2019",
+          exp6_org: "Deloitte, Amsterdam.",
+          exp6_text: "Aandeel in projecten van cyber risk quantification.",
+
+          edu_title: "EDUCATIE",
+          edu_sub: "opleidingen",
+          edu1_role: "Computational Science, MSc.",
+          edu1_dates: "2019 – 2021",
+          edu1_org: "Universiteit van Amsterdam",
+          edu1_text: "Thesis at AFC Ajax, cum Laude. GPA: 8.6.",
+
+          edu2_role: "Natuur- & Sterrenkunde, BSc.",
+          edu2_dates: "2014 – 2017",
+          edu2_org: "Universiteit van Amsterdam",
+          edu2_text: "BSc: Honours, University of Edinburgh uitwisseling, cum Laude. GPA 8.1.",
+
+          edu3_role: "Natuur- & Sterrenkunde, MSc. (eerste helft)",
+          edu3_dates: "2021 – 2022",
+          edu3_org: "Universiteit van Amsterdam",
+          edu3_text: "MSc: Eerste helft van het programma. Track: GRAPPA. GPA: 8.7.",
+
+          sidebar_title: "DETAILS",
+          sidebar_sub: "contact, skills, interests",
+
+          c_phone_k: "Telefoon",
+          c_phone_v: "+31 6 24 93 63 58",
+          c_mail_k: "Mail",
+          c_mail_v: "yagelschoonderbeek@gmail.com",
+          c_addr_k: "Adres",
+          c_addr_v: "Bloemgracht 180<br>1015TV, Amsterdam",
+          c_socials_k: "Socials",
+          c_ig: "Instagram",
+          c_sc: "Soundcloud",
+
+          skills_title: "Skills",
+          skills_sub: "korte lijst",
+          skill1: "Planning- en organisatorische vaardigheden",
+          skill2: "Snelle leerling",
+          skill3: "Verantwoordelijkheidsgevoel",
+          skill4: "Technisch onderlegd",
+
+          interests_title: "Interesses",
+          interests_sub: "waar ik van aan ga",
+          int1: "Bakken en koken",
+          int2: "Muziek",
+          int3: "Voetbal",
+          int4: "Boulderen",
+          int5: "Drummen",
+          int6: "Film en fotografie",
+
+          pill_home: "HOME",
+          pill_contact: "CONTACT"
+        },
+
+        en: {
+          name: "YA'GEL SCHOONDERBEEK",
+
+          profile_title: "PROFILE",
+          profile_sub: "short intro",
+          profile_text: "Socially active volunteer chef, music head and data scientist. I am sharp-minded, flexible, stress-resistant, dedicated and like to be challenged.",
+
+          experience_title: "EXPERIENCE",
+          experience_sub: "roles & projects",
+
+          exp1_role: "Volunteer chef",
+          exp1_dates: "2023 – 2025",
+          exp1_org: "Testtafel & Homeless shelter De Kloof.",
+          exp1_text: "Responsible for meal preparation and service for homeless visitors at De Kloof, and assisting with the fine-dining menu at Testtafel. Occasionally supporting at festival kitchens and a gyoza training at Marukin Ramen in Tokyo.",
+
+          exp2_role: "DJ and event organiser",
+          exp2_dates: "2022 – 2025",
+          exp2_org: "Freelance/volunteer.",
+          exp2_text: "Performances at radios and live venues, such as Radio TNP, RRFM, Kanaal40 and Landjuweel Festival. Co-founder of mpsoundsystem, a collective that aims to organise all sorts of free (music) events through second-hand gear and community building.",
+
+          exp3_role: "Live sound engineer & studio host",
+          exp3_dates: "2021 – 2025",
+          exp3_org: "Freelance/volunteer.",
+          exp3_text: "Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.",
+
+          exp4_role: "Data scientist",
+          exp4_dates: "2021 – 2025",
+          exp4_org: "AFC Ajax & NIDAP.",
+          exp4_text: "Responsible for data (analyses) on player movement and the job/education market.",
+
+          exp5_role: "Barman & coordinating roles",
+          exp5_dates: "2017 – 2022",
+          exp5_org: "Filmtheater Kriterion.",
+          exp5_text: "Varying coordinating roles over time, such as board member and coordinator of hiring-, PR- and live performances committee. Besides these positions, weekly shifts behind the bar, in the kitchen and as projector guide.",
+
+          exp6_role: "Working student",
+          exp6_dates: "2018 – 2019",
+          exp6_org: "Deloitte, Amsterdam.",
+          exp6_text: "Contributed to projects in cyber risk quantification.",
+
+          edu_title: "EDUCATION",
+          edu_sub: "programmes",
+
+          edu1_role: "MSc. Computational Science",
+          edu1_dates: "2019 – 2021",
+          edu1_org: "University of Amsterdam",
+          edu1_text: "Thesis at AFC Ajax, cum Laude. GPA: 8.6",
+
+          edu2_role: "BSc. Physics & Astronomy",
+          edu2_dates: "2014 – 2017",
+          edu2_org: "University of Amsterdam",
+          edu2_text: "Honours, exchange to University of Edinburgh, cum Laude. GPA 8.1",
+
+          edu3_role: "Half of MSc. Physics and Astronomy",
+          edu3_dates: "2021 – 2022",
+          edu3_org: "University of Amsterdam",
+          edu3_text: "Completed first year of two year programme. Track: GRAPPA, GPA: 8.7",
+
+          sidebar_title: "DETAILS",
+          sidebar_sub: "contact, skills, interests",
+
+          c_phone_k: "Phone",
+          c_phone_v: "+31 6 24 93 63 58",
+          c_mail_k: "Mail",
+          c_mail_v: "yagelschoonderbeek@gmail.com",
+          c_addr_k: "Address",
+          c_addr_v: "Bloemgracht 180<br>1015TV, Amsterdam",
+          c_socials_k: "Socials",
+          c_ig: "Instagram",
+          c_sc: "Soundcloud",
+
+          skills_title: "Skills",
+          skills_sub: "short list",
+          skill1: "Planning- and organisational abilities",
+          skill2: "Technically proficient",
+          skill3: "Sense of responsibility",
+          skill4: "Fast learner",
+
+          interests_title: "Interests",
+          interests_sub: "what I’m into",
+          int1: "Music in many forms",
+          int2: "Football",
+          int3: "Baking",
+          int4: "Cooking",
+          int5: "Bouldering",
+          int6: "Chess and photographic art",
+
+          pill_home: "HOME",
+          pill_contact: "CONTACT"
+        }
+      };
+
+      function applyLang(lang){
+        var pack = dict[lang] || dict.nl;
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll("[data-i18n]").forEach(function(el){
+          var key = el.getAttribute("data-i18n");
+          if(pack[key] !== undefined){
+            if(el.tagName.toLowerCase() === "a" && key === "c_mail_v"){
+              el.textContent = pack[key];
+            } else {
+              el.innerHTML = pack[key];
+            }
+          }
+        });
+
+        // show/hide English-only experience block
+        var extra = document.getElementById("exp3_optional_en");
+        if(extra){
+          extra.style.display = (lang === "en") ? "" : "none";
+        }
+
+        document.querySelectorAll(".lang-btn").forEach(function(btn){
+          btn.setAttribute("aria-pressed", btn.getAttribute("data-lang") === lang ? "true" : "false");
+        });
+
+        localStorage.setItem("lang", lang);
+      }
+
+      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      if(!dict[initial]) initial = "nl";
+      applyLang(initial);
+
+      document.querySelectorAll(".lang-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          applyLang(btn.getAttribute("data-lang"));
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    // contact (anti-scrape) – same pattern you used elsewhere
+    (function(){
+      const user = "yagelschoonderbeek";
+      const domain = "gmail.com";
+      const link = document.getElementById("contactLink");
+      const inline = document.getElementById("mailInline");
+
+      function goMail(e){
+        if(e) e.preventDefault();
+        window.location.href = "mailto:" + user + "@" + domain;
+      }
+
+      if(link) link.addEventListener("click", goMail);
+      if(inline) inline.addEventListener("click", goMail);
+    })();
+  </script>
+</body>
+</html>

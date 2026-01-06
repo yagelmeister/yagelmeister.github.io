@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yagel.nl - de kloof</title>
+  <meta name="description" content="meals for homeless people" />
+
+  <link rel="stylesheet" href="styling.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar" aria-label="Taal kiezen">
+        <button class="lang-btn" type="button" data-lang="nl" aria-pressed="true">nl</button>
+        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">en</button>
+      </div>
+
+      <div class="name">
+        <a href="home.html" data-i18n="name">YA'GEL SCHOONDERBEEK</a>
+      </div>
+      <div class="rule"></div>
+    </header>
+
+    <main class="grid mosaic" aria-label="DE KLOOF">
+      <div class="card tilt-1 span-3 row-1">
+        <div>
+          <div class="label" data-i18n="intro_label">DAKLOZENOPVANG DE KLOOF</div>
+          <div class="meta" data-i18n="intro_meta">Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.</div>
+        </div>
+      </div>
+
+      <div id="sets-root" style="display: contents;"></div>
+    </main>
+
+    <footer>
+      <a class="pill" href="cheffie.html" data-i18n="pill_cheffie">CHEF YAKKI</a>
+      <a class="pill" href="home.html" data-i18n="pill_home">HOME</a>
+      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme || "auto");
+    })();
+
+    var SETS = [
+      {
+        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
+        desc:  { nl: "Mijn data-baas kwam mee tortillas maken; van deeg tot salsa.", en: "My data-employer join to make tortillas; from dough to salsa." },
+        photos: [
+          "images/koken/daklozenopvang/tortillas1.jpg",
+          "images/koken/daklozenopvang/tortillas3.jpg",
+          "images/koken/daklozenopvang/tortillas2.jpg"
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-3"
+      },
+      {
+        title: { nl: "Spatial Sensations", en: "Spatial Sensations" },
+        desc:  { nl: "Onze zintuigen ervaren samen met De Sering.", en: "Experiencing our senses together with De Sering" },
+        photos: [
+          "images/muziek/mps/spatial/spatial_01.jpg",
+          "images/muziek/mps/spatial/spatial_02.jpg",
+          "images/muziek/mps/spatial/spatial_03.jpg",
+          "images/muziek/mps/spatial/spatial_04.jpg",
+          "images/muziek/mps/spatial/spatial_05.jpg",
+          "images/muziek/mps/spatial/spatial_06.jpg",
+          "images/muziek/mps/spatial/spatial_07.jpg",
+          "images/muziek/mps/spatial/spatial_08.jpg"
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-1"
+      },
+      {
+        title: { nl: "Rita's leefhuis", en: "Rita's living space" },
+        desc:  { nl: "Een bandjes middag in een woonkerk in Amsterdam Noord.", en: "A live-music day in a living space in Amsterdam Noord." },
+        photos: ["images/mps_01.jpg","images/mps_02.jpg","images/mps_03.jpg"],
+        size:  "span-3 row-2",
+        tilt:  "tilt-2"
+      }
+    ];
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    var SLIDER_LABELS = {
+      nl: { prev: "vorige", next: "volgende" },
+      en: { prev: "prev", next: "next" }
+    };
+
+    function renderSets(lang){
+      var root = document.getElementById("sets-root");
+      if(!root) return;
+      root.innerHTML = "";
+
+      SETS.forEach(function(s, idx){
+        var card = document.createElement("div");
+        card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
+
+        var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
+        var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var sliderId = "slider-" + idx;
+
+        var labels = SLIDER_LABELS[lang] || SLIDER_LABELS.en;
+
+        card.innerHTML =
+          '<div>' +
+            '<div class="label">' + escapeHtml(title) + '</div>' +
+            '<div class="meta">photos</div>' +
+            (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
+            '<div class="slider" data-slider-id="' + sliderId + '">' +
+              '<div class="slider-frame" aria-label="photo slider">' +
+                photos.map(function(p, pIdx){
+                  return '<img loading="lazy" src="' + escapeHtml(p) + '" alt="" data-index="' + pIdx + '"' +
+                         (pIdx===0 ? ' class="is-active"' : '') + '>';
+                }).join("") +
+              '</div>' +
+              '<div class="slider-controls">' +
+                '<button type="button" class="slider-btn" data-action="prev" aria-label="' + labels.prev + '">' +
+                  labels.prev +
+                '</button>' +
+                '<div class="slider-dots" aria-label="photo dots">' +
+                  photos.map(function(_, pIdx){
+                    return '<button type="button" class="dot" data-action="dot" data-index="' + pIdx + '"' +
+                           ' aria-pressed="' + (pIdx===0 ? "true" : "false") + '"' +
+                           ' aria-label="photo ' + (pIdx+1) + '"></button>';
+                  }).join("") +
+                '</div>' +
+                '<button type="button" class="slider-btn" data-action="next" aria-label="' + labels.next + '">' +
+                  labels.next +
+                '</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+
+        root.appendChild(card);
+      });
+
+      wireSliders();
+    }
+
+    function wireSliders(){
+      document.querySelectorAll(".slider").forEach(function(slider){
+        var frame = slider.querySelector(".slider-frame");
+        if(!frame) return;
+
+        var imgs = Array.from(frame.querySelectorAll("img"));
+        var dots = Array.from(slider.querySelectorAll(".dot"));
+        if(imgs.length === 0) return;
+
+        var current = imgs.findIndex(function(img){ return img.classList.contains("is-active"); });
+        if(current < 0) current = 0;
+
+        imgs.forEach(function(img){
+          try {
+            img.loading = "eager";
+            img.decoding = "async";
+          } catch(e) {}
+          if(img.complete) return;
+          var pre = new Image();
+          pre.src = img.src;
+        });
+
+        function setDots(next){
+          dots.forEach(function(d){ d.setAttribute("aria-pressed", "false"); });
+          if(dots[next]) dots[next].setAttribute("aria-pressed", "true");
+        }
+
+        function show(next){
+          imgs.forEach(function(img){ img.classList.remove("is-active"); });
+          imgs[next].classList.add("is-active");
+          setDots(next);
+          current = next;
+        }
+
+        var switching = false;
+
+        function goTo(i){
+          if(switching) return;
+          if(imgs.length === 0) return;
+
+          var next = (i + imgs.length) % imgs.length;
+          if(next === current) return;
+
+          var nextImg = imgs[next];
+          switching = true;
+
+          if(nextImg.complete){
+            show(next);
+            switching = false;
+            return;
+          }
+
+          var onReady = function(){
+            if(nextImg.decode){
+              nextImg.decode().catch(function(){}).finally(function(){
+                show(next);
+                switching = false;
+              });
+            } else {
+              show(next);
+              switching = false;
+            }
+          };
+
+          nextImg.addEventListener("load", onReady, { once: true });
+          nextImg.addEventListener("error", function(){ switching = false; }, { once: true });
+
+          var pre = new Image();
+          pre.src = nextImg.src;
+        }
+
+        slider.querySelectorAll("[data-action]").forEach(function(btn){
+          btn.addEventListener("click", function(){
+            var action = btn.getAttribute("data-action");
+            if(action === "prev") goTo(current - 1);
+            if(action === "next") goTo(current + 1);
+            if(action === "dot"){
+              var idx = parseInt(btn.getAttribute("data-index"), 10);
+              if(!Number.isNaN(idx)) goTo(idx);
+            }
+          });
+        });
+
+        frame.addEventListener("click", function(){
+          goTo(current + 1);
+        });
+      });
+    }
+
+    (function(){
+      var dict = {
+        nl: {
+          name: "YA'GEL SCHOONDERBEEK",
+          intro_label: "DAKLOZENOPVANG DE KLOOF",
+          intro_meta: "Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.",
+          pill_home: "HOME",
+          pill_cheffie: "CHEF YAKKI",
+          pill_contact: "CONTACT"
+        },
+        en: {
+          name: "YA'GEL SCHOONDERBEEK",
+          intro_label: "HOMELESS SHELTER DE KLOOF",
+          intro_meta: "Every Thursday morning I cook a meal for lunch at De Kloof. I arrive at 9am, take inventory of what’s available, and decide on the menu. Then I usually have about three and a half hours to do the shopping and prepare everything. Luckily, friends and family often come to help. This is the place where my passion for cooking began.",
+          pill_home: "HOME",
+          pill_cheffie: "CHEF YAKKI",
+          pill_contact: "CONTACT"
+        }
+      };
+
+      function applyLang(lang){
+        var pack = dict[lang] || dict.nl;
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll("[data-i18n]").forEach(function(el){
+          var key = el.getAttribute("data-i18n");
+          if(pack[key]) el.textContent = pack[key];
+        });
+
+        document.querySelectorAll(".lang-btn").forEach(function(btn){
+          var isOn = btn.getAttribute("data-lang") === lang;
+          btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+        });
+
+        localStorage.setItem("lang", lang);
+        renderSets(lang);
+      }
+
+      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      if(!dict[initial]) initial = "nl";
+
+      applyLang(initial);
+
+      document.querySelectorAll(".lang-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          applyLang(btn.getAttribute("data-lang"));
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const user = "yagelschoonderbeek";
+      const domain = "gmail.com";
+      const link = document.getElementById("contactLink");
+      if (!link) return;
+
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.href = "mailto:" + user + "@" + domain;
+      });
+    })();
+  </script>
+</body>
+</html>
