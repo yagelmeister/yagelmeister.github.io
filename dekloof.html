@@ -31,7 +31,7 @@
       <div class="card tilt-1 span-3 row-1">
         <div>
           <div class="label" data-i18n="intro_label">DAKLOZENOPVANG DE KLOOF</div>
-          <div class="meta" data-i18n="intro_meta">Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.</div>
+          <!-- <div class="meta" data-i18n="intro_meta">Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.</div> -->
         </div>
       </div>
 
@@ -118,35 +118,42 @@
 
         var labels = SLIDER_LABELS[lang] || SLIDER_LABELS.en;
 
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var first = photos[0];
+        var last  = photos[photos.length - 1];
+
+        var loopPhotos;
+        if(photos.length > 1){
+          loopPhotos = [last].concat(photos).concat([first]); // clone-last + echte fotos + clone-first
+        }else{
+          loopPhotos = photos.slice();
+        }
+
         card.innerHTML =
           '<div>' +
             '<div class="label">' + escapeHtml(title) + '</div>' +
             '<div class="meta">photos</div>' +
             (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
+
             '<div class="slider" data-slider-id="' + sliderId + '">' +
               '<div class="slider-frame" aria-label="photo slider">' +
-                photos.map(function(p, pIdx){
-                  return '<img loading="lazy" src="' + escapeHtml(p) + '" alt="" data-index="' + pIdx + '"' +
-                         (pIdx===0 ? ' class="is-active"' : '') + '>';
-                }).join("") +
-              '</div>' +
-              '<div class="slider-controls">' +
-                '<button type="button" class="slider-btn" data-action="prev" aria-label="' + labels.prev + '">' +
-                  labels.prev +
-                '</button>' +
-                '<div class="slider-dots" aria-label="photo dots">' +
-                  photos.map(function(_, pIdx){
-                    return '<button type="button" class="dot" data-action="dot" data-index="' + pIdx + '"' +
-                           ' aria-pressed="' + (pIdx===0 ? "true" : "false") + '"' +
-                           ' aria-label="photo ' + (pIdx+1) + '"></button>';
+
+                '<div class="slider-track">' +
+                  loopPhotos.map(function(p){
+                    return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
                   }).join("") +
                 '</div>' +
-                '<button type="button" class="slider-btn" data-action="next" aria-label="' + labels.next + '">' +
-                  labels.next +
-                '</button>' +
+
+                '<div class="slider-overlay" aria-hidden="true">' +
+                  '<div class="slider-hover left"></div>' +
+                  '<div class="slider-hover right"></div>' +
+                '</div>' +
+
               '</div>' +
             '</div>' +
+
           '</div>';
+
 
         root.appendChild(card);
       });
@@ -155,91 +162,212 @@
     }
 
     function wireSliders(){
+      var SPEED_AUTO = 60;       // px per soconde
+      var SPEED_USER = 100;       // px per soconde
+      var AUTO_DELAY = 2000;      // ms wachten na in-beeld komen / mouseleave
+      var VIEW_THRESHOLD = 1.0;  // hoeveel van de slider in beeld moet zijn
+
+      var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var frame = entry.target;
+          var api = frame.__sliderApi;
+          if(!api) return;
+
+          api.inView = entry.isIntersecting && entry.intersectionRatio >= VIEW_THRESHOLD;
+
+          if(!api.inView){
+            api.stopAll();
+          }else{
+            api.maybeScheduleAuto();
+          }
+        });
+      }, { threshold: [1] }) : null;
+
       document.querySelectorAll(".slider").forEach(function(slider){
         var frame = slider.querySelector(".slider-frame");
-        if(!frame) return;
+        var track = slider.querySelector(".slider-track");
+        if(!frame || !track) return;
 
-        var imgs = Array.from(frame.querySelectorAll("img"));
-        var dots = Array.from(slider.querySelectorAll(".dot"));
-        if(imgs.length === 0) return;
+        var slides = Array.from(track.querySelectorAll("img"));
+        if(slides.length < 2) return;
 
-        var current = imgs.findIndex(function(img){ return img.classList.contains("is-active"); });
-        if(current < 0) current = 0;
+        var leftZone  = slider.querySelector(".slider-hover.left");
+        var rightZone = slider.querySelector(".slider-hover.right");
+        if(!leftZone || !rightZone) return;
 
-        imgs.forEach(function(img){
-          try {
-            img.loading = "eager";
-            img.decoding = "async";
-          } catch(e) {}
-          if(img.complete) return;
-          var pre = new Image();
-          pre.src = img.src;
-        });
+        var dir = 0;
+        var raf = null;
+        var lastT = 0;
 
-        function setDots(next){
-          dots.forEach(function(d){ d.setAttribute("aria-pressed", "false"); });
-          if(dots[next]) dots[next].setAttribute("aria-pressed", "true");
+        var offset = 0;     // px
+        var slideW = 0;     // px
+        var realCount = 0;  // echte fotos (zonder clones)
+
+        var hovering = false;
+        var inView = false;
+
+        var autoTimer = null;
+        var autoDir = 1; // standaard auto naar rechts
+
+        var api = { isAuto: false };
+
+        function apply(){
+          track.style.transform = "translateX(" + (-offset) + "px)";
         }
 
-        function show(next){
-          imgs.forEach(function(img){ img.classList.remove("is-active"); });
-          imgs[next].classList.add("is-active");
-          setDots(next);
-          current = next;
+        function recalc(){
+          slideW = frame.clientWidth;
+          realCount = slides.length >= 3 ? (slides.length - 2) : slides.length;
+
+          // startpositie: echte eerste (index 1) als we clones hebben
+          if(slides.length >= 3 && offset === 0){
+            offset = slideW;
+          }
+          apply();
         }
 
-        var switching = false;
+        function stopRAF(){
+          if(raf){
+            cancelAnimationFrame(raf);
+            raf = null;
+          }
+          lastT = 0;
+        }
 
-        function goTo(i){
-          if(switching) return;
-          if(imgs.length === 0) return;
+        function tick(t){
+          if(!lastT) lastT = t;
+          var dt = (t - lastT) / 1000;
+          lastT = t;
 
-          var next = (i + imgs.length) % imgs.length;
-          if(next === current) return;
+          if(dir !== 0){
+            var speed = api.isAuto ? SPEED_AUTO : SPEED_USER;
+            offset += dir * speed * dt;
 
-          var nextImg = imgs[next];
-          switching = true;
+            if(slides.length >= 3){
+              var min = 0;
+              var max = (realCount + 1) * slideW;
 
-          if(nextImg.complete){
-            show(next);
-            switching = false;
-            return;
+              if(offset >= max){
+                offset = slideW;              // terug naar echte eerste
+              }else if(offset <= min){
+                offset = realCount * slideW;  // naar echte laatste
+              }
+            }else{
+              var max2 = (slides.length - 1) * slideW;
+              if(offset >= max2) offset = 0;
+              if(offset < 0) offset = max2;
+            }
+
+            apply();
           }
 
-          var onReady = function(){
-            if(nextImg.decode){
-              nextImg.decode().catch(function(){}).finally(function(){
-                show(next);
-                switching = false;
-              });
-            } else {
-              show(next);
-              switching = false;
-            }
-          };
-
-          nextImg.addEventListener("load", onReady, { once: true });
-          nextImg.addEventListener("error", function(){ switching = false; }, { once: true });
-
-          var pre = new Image();
-          pre.src = nextImg.src;
+          raf = requestAnimationFrame(tick);
         }
 
-        slider.querySelectorAll("[data-action]").forEach(function(btn){
-          btn.addEventListener("click", function(){
-            var action = btn.getAttribute("data-action");
-            if(action === "prev") goTo(current - 1);
-            if(action === "next") goTo(current + 1);
-            if(action === "dot"){
-              var idx = parseInt(btn.getAttribute("data-index"), 10);
-              if(!Number.isNaN(idx)) goTo(idx);
-            }
-          });
+        function startRAF(newDir, isAuto){
+          api.isAuto = !!isAuto;   // true = auto, false = user
+          dir = newDir;
+          if(raf) return;
+          lastT = 0;
+          raf = requestAnimationFrame(tick);
+        }
+
+
+        function stopMove(){
+          dir = 0;
+          stopRAF();
+        }
+
+        function clearAutoTimer(){
+          if(autoTimer){
+            clearTimeout(autoTimer);
+            autoTimer = null;
+          }
+        }
+
+        function stopAll(){
+          clearAutoTimer();
+          stopMove();
+        }
+
+        function maybeScheduleAuto(){
+          clearAutoTimer();
+          if(!inView) return;
+          if(hovering) return;
+
+          autoTimer = setTimeout(function(){
+            // check opnieuw op moment van starten
+            if(!inView) return;
+            if(hovering) return;
+            startRAF(autoDir, true);
+          }, AUTO_DELAY);
+        }
+
+        function setHover(state){
+          hovering = state;
+          if(hovering){
+            // user neemt over
+            stopAll();
+          }else{
+            // user weg -> na delay auto door
+            maybeScheduleAuto();
+          }
+        }
+
+        // init
+        recalc();
+
+        // resize: behoud ongeveer dezelfde "index"
+        window.addEventListener("resize", function(){
+          var oldW = slideW || frame.clientWidth;
+          var idx = oldW ? (offset / oldW) : 0;
+          recalc();
+          offset = idx * slideW;
+          apply();
         });
 
-        frame.addEventListener("click", function(){
-          goTo(current + 1);
+        // Hover gedrag (pauzeert auto zodra je erop zit)
+        frame.addEventListener("mouseenter", function(){ setHover(true); });
+        frame.addEventListener("mouseleave", function(){
+          setHover(false);
+          stopMove(); // stop ook manual push als je uit de slider gaat
         });
+
+        // User control via zones
+        leftZone.addEventListener("mouseenter", function(){
+          setHover(true);
+          startRAF(-1, false);
+        });
+        rightZone.addEventListener("mouseenter", function(){
+          setHover(true);
+          startRAF(1, false);
+        });
+
+        leftZone.addEventListener("mouseleave", function(){
+          stopMove();
+          setHover(false);
+        });
+        rightZone.addEventListener("mouseleave", function(){
+          stopMove();
+          setHover(false);
+        });
+
+        // “API” voor IntersectionObserver
+        frame.__sliderApi = {
+          get inView(){ return inView; },
+          set inView(v){ inView = !!v; },
+          stopAll: stopAll,
+          maybeScheduleAuto: maybeScheduleAuto
+        };
+
+        // observe in-view
+        if(io){
+          io.observe(frame);
+        }else{
+          // fallback zonder IO: meteen schedulen
+          inView = true;
+          maybeScheduleAuto();
+        }
       });
     }
 
@@ -247,16 +375,16 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          intro_label: "DAKLOZENOPVANG DE KLOOF",
-          intro_meta: "Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.",
+          // intro_label: "DAKLOZENOPVANG DE KLOOF",
+          intro_label: "Elke donderdag kook ik bij De Kloof een maaltijd\nOm 9 uur 's ochtends kom ik aan, inventariseer wat er is en bedenk het menu\n\nVervolgens heb ik 3 uur voor boodschappen en het bereiden\nGelukkig komen vrienden en familie vaak helpen\n\nDit is de plek waar mijn passie voor koken is begonnen.",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          intro_label: "HOMELESS SHELTER DE KLOOF",
-          intro_meta: "Every Thursday morning I cook a meal for lunch at De Kloof. I arrive at 9am, take inventory of what’s available, and decide on the menu. Then I usually have about three and a half hours to do the shopping and prepare everything. Luckily, friends and family often come to help. This is the place where my passion for cooking began.",
+          // intro_label: "HOMELESS SHELTER DE KLOOF",
+          intro_label: "Every Thursday I cook a meal at De Kloof\nI arrive at 9am, take inventory and formulate a recipe\n\nThen I have 3 hours for shopping and preparations\nLuckily, friends and family often help out\n\nThis is the place where my passion for cooking started",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"

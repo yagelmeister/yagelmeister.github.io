@@ -36,9 +36,11 @@
         </div>
       </a>
 
-      <a class="card tilt-2" href="data.html">
+      <a class="card tilt-2 matrix-card" href="data.html">
         <div>
-          <img src="images/data/ajax/ajax heatmap parameters.png" alt="" class="card-image" />
+          <video id="matrixVideo" class="card-image" muted autoplay playsinline preload="metadata" loop speed="0.1">
+          <source src="images/data/matrix.mp4" type="video/mp4">
+        </video>
           <div class="label" data-i18n="tile_data">DATA</div>
           <div class="meta" data-i18n="meta_data">Insights in professional football & the Dutch educational market</div>
         </div>
@@ -73,22 +75,22 @@
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
           tile_data: "DATA",
-          meta_data: "inzichten in professioneel voetbal & de Nederlandse educatiemarkt",
+          meta_data: "mijn werk als data scientist aan inzichten in professioneel voetbal & de Nederlandse educatiemarkt",
           tile_cooking: "CHEF YAKKI",
-          meta_cooking: "privé catering, gerechten bij de daklozenopvang & zuurdesem avonturen",
+          meta_cooking: "als kok doe ik privé catering, kook wekelijks maaltijden bij een daklozenopvang & leer ik zuurdesem bakken bij bakkerij mater",
           tile_music: "MUZIEK",
-          meta_music: "deejayen, mpsoundsystem & een zelf-gebouwde muziekstudio",
+          meta_music: "muziekprojecten waar ik me bezighoud zijn deejayen, cultuurcollectief mpsoundsystem & het zelf bouwen van een muziekstudio",
           pill_cv: "CV",
           pill_contact: "CONTACT"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
           tile_data: "DATA",
-          meta_data: "Insights in professional football & the Dutch educational market",
+          meta_data: "my work as a data scientist on insights in professional football & the Dutch educational market",
           tile_cooking: "CHEF YAKKI",
-          meta_cooking: "private catering, dishes at a homeless shelter & sourdough adventures",
+          meta_cooking: "as a chef i do private catering, weekly cook meals at a homeless shelter & learn how to bake sourdough at bakery mater",
           tile_music: "MUSIC",
-          meta_music: "deejaying, mpsoundsystem & a self-built music studio",
+          meta_music: "music projects i'm occupied with are deejaying, culture collective mpsoundsystem & the building of a music studio",
           pill_cv: "CV",
           pill_contact: "CONTACT"
         }
@@ -136,5 +138,57 @@
       });
     })();
   </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const v = document.getElementById("matrixVideo");
+      if (!v) return;
+
+      v.playbackRate = 0.1; // 👈 HIER regel je de snelheid
+    });
+    </script>
+
+  <!-- <script>
+    // Kies hier het frame (in seconden) dat je als still wil tonen bij load.
+    const MATRIX_STILL_TIME = 0.0;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const v = document.getElementById("matrixVideo");
+      if (!v) return;
+
+      v.loop = true;
+      v.muted = true;
+      v.playsInline = true;
+
+      // Start: ga naar still-frame en pauzeer
+      const setStill = () => {
+        const t = Math.max(0, Math.min(MATRIX_STILL_TIME, (v.duration || MATRIX_STILL_TIME)));
+        try { v.currentTime = t; } catch (e) {}
+        v.pause();
+      };
+
+      // Sommige browsers hebben 2 events nodig voor betrouwbaar seeken
+      v.addEventListener("loadedmetadata", setStill, { once: true });
+      v.addEventListener("seeked", () => { v.pause(); });
+
+      // Hover: play en blijf loopen
+      const card = v.closest(".matrix-card");
+      if (!card) return;
+
+      card.addEventListener("mouseenter", async () => {
+        try {
+          await v.play();
+        } catch (e) {
+          // autoplay policies kunnen soms zeuren; muted+playsinline helpt meestal
+        }
+      });
+
+      // Mouse leaves: pause, maar laat currentTime staan (dus freeze op laatste frame)
+      card.addEventListener("mouseleave", () => {
+        v.pause();
+      });
+    });
+  </script> -->
+
 </body>
 </html>
