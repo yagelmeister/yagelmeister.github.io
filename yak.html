@@ -27,8 +27,12 @@
     .span-2{ grid-column: span 2; }
     .span-3{ grid-column: span 3; }
     .span-4{ grid-column: span 4; }
+    .span-5{ grid-column: span 5; }
+    .span-6{ grid-column: span 6; }
     .row-1{ grid-row: span 1; }
     .row-2{ grid-row: span 2; }
+    .row-3{ grid-row: span 3; }
+    .row-4{ grid-row: span 4; }
 
     /* embed block inside a card */
     .embed{
@@ -88,13 +92,24 @@
     </header>
 
     <main class="grid mosaic" aria-label="DJ sets">
+      <!-- filter tile -->
+      <div class="card tilt-2 span-6 row-1">
+        <div>
+          <div class="label">FILTER</div>
+          <div class="meta">genres</div>
+          <div class="tags" id="filters-root" aria-label="Filter sets"></div>
+        </div>
+      </div>
+
       <!-- intro tile -->
       <div class="card tilt-1 span-3 row-1">
         <div>
           <div class="label" data-i18n="dj_label">YAK</div>
-          <div class="meta" data-i18n="dj_meta">Een selectie van mijn radio shows en mixes.</div>
+          <!-- <div class="meta" data-i18n="dj_meta">Een selectie van mijn radio shows en mixes.</div> -->
         </div>
       </div>
+
+      
 
       <!-- container where mixes will be rendered -->
       <div id="mixes-root" style="display: contents;"></div>
@@ -129,40 +144,54 @@
           "span-4 row-2 sc-h-lg"
     */
     var MIXES = [
+      
       {
-        title: { nl: "Radio Radio FM — 22.01.2025", en: "Radio Radio FM — 22.01.2025" },
-        desc:  { nl: "Progressive- en trance house.", en: "Progressive- en trance house." },
-        url:   "https://soundcloud.com/radioradiofm/rrfm-yak-22-01-2025",
+        title: { nl: "Radio Radio FM — 18.12.2025", en: "Radio Radio FM — 18.12.2025" },
+        // desc:  { nl: "Progressive- en trance house.", en: "Progressive- en trance house." },
+        tags:  ["progressive", "trance house"],
+        url:   "https://soundcloud.com/radioradiofm/rrfm-o-yak-o-18-12-2025",
         size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-2"
       },
       {
         title: { nl: "Radio TNP — 15.11.2024", en: "Radio TNP — 15.11.2024" },
-        desc:  { nl: "Slow jams, groove en balearica", en: "Slow jams, groove and balearica" },
+        // desc:  { nl: "slow jams, groove en balearica", en: "slow jams, groove and balearica" },
+        tags:  ["slow jams", "groove", "balearica"],
         url:   "https://soundcloud.com/radiotemponaopara/yak-15-11-2024",
         size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-1"
       },
       {
-        title: { nl: "Radio 80000 — 10.09.2024", en: "Radio 80000 — 10.09.2024" },
-        desc:  { nl: "House en stampot bij de daklozenopvang", en: "House and 'stampot' at the homeless shelter" },
-        url:   "https://soundcloud.com/radio80000/appetizer-w-yak-yagel-100924",
+        title: { nl: "Radio Radio FM — 22.01.2025", en: "Radio Radio FM — 22.01.2025" },
+        // desc:  { nl: "Progressive- en trance house.", en: "Progressive- en trance house." },
+        tags:  ["progressive", "trance house"],
+        url:   "https://soundcloud.com/radioradiofm/rrfm-yak-22-01-2025",
         size:  "span-3 row-2 sc-h-sm",
-        tilt:  "tilt-3"
+        tilt:  "tilt-2"
       },
       {
         title: { nl: "Studio \\K — 26.01.2024", en: "Studio \\K — 26.01.2024" },
-        desc:  { nl: "Progressive- en 90s house", en: "Progressive- and 90s house" },
+        // desc:  { nl: "Progressive- en 90s house", en: "Progressive- and 90s house" },
+        tags:  ["progressive", "90s house"],
         url:   "https://soundcloud.com/ditisstudiok/yak-26012024",
         size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-2"
       },
       {
         title: { nl: "Radio TNP — 03.09.2022", en: "Radio TNP — 03.09.2022" },
-        desc:  { nl: "World en funk; Mijn allereerste radio show :——)", en: "World and funk; My very first radio show :——)" },
+        // desc:  { nl: "World en funk; Mijn allereerste radio show :——)", en: "World and funk; My very first radio show :——)" },
+        tags:  ["world", "groove", "radio debut"],
         url:   "https://soundcloud.com/radiotemponaopara/yak-03-09-2022",
         size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-1"
+      },
+      {
+        title: { nl: "Radio 80000 — 10.09.2024", en: "Radio 80000 — 10.09.2024" },
+        // desc:  { nl: "House en stampot bij de daklozenopvang", en: "House and 'stampot' at the homeless shelter" },
+        tags:  ["90s house", "stampot"],
+        url:   "https://soundcloud.com/radio80000/appetizer-w-yak-yagel-100924",
+        size:  "span-3 row-2 sc-h-sm",
+        tilt:  "tilt-3"
       }
     ];
 
@@ -175,30 +204,101 @@
         "&show_user=true&show_reposts=false&show_teaser=true&visual=false";
     }
 
+    var activeTags = new Set(["all"]);
+
+    function renderFilters(lang){
+      var root = document.getElementById("filters-root");
+      if(!root) return;
+
+      // collect unique tags
+      var tagSet = new Set();
+      MIXES.forEach(function(m){
+        (m.tags || []).forEach(function(t){
+          if(t && String(t).trim()) tagSet.add(String(t).trim());
+        });
+      });
+
+      var allTags = ["all"].concat(Array.from(tagSet).sort());
+      root.innerHTML = "";
+
+      allTags.forEach(function(tag){
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tag tag-btn";
+        btn.textContent = tag;
+
+        var isActive = activeTags.has(tag);
+        btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+
+        // add visual selected class (Safari-proof)
+        btn.classList.toggle("is-selected", isActive);
+
+        btn.addEventListener("click", function(){
+          if(tag === "all"){
+            // hard reset
+            activeTags = new Set(["all"]);
+          } else {
+            // leaving "all" mode as soon as you pick a real tag
+            if(activeTags.has("all")) activeTags.delete("all");
+
+            // toggle tag
+            if(activeTags.has(tag)) activeTags.delete(tag);
+            else activeTags.add(tag);
+
+            // if nothing selected anymore, fallback to all
+            if(activeTags.size === 0) activeTags.add("all");
+          }
+          renderFilters(lang);
+          renderMixes(lang);
+        });
+
+        root.appendChild(btn);
+      });
+    }
+
     function renderMixes(lang){
       var root = document.getElementById("mixes-root");
       if(!root) return;
       root.innerHTML = "";
 
-      MIXES.forEach(function(m){
-        var card = document.createElement("div");
-        card.className = "card player " + (m.tilt || "") + " " + (m.size || "");
+      var isAll = activeTags.has("all");
+      var wanted = Array.from(activeTags); // selected tags
 
-        var title = (m.title && (m.title[lang] || m.title.nl)) || "Mix";
-        var desc = m.desc ? (m.desc[lang] || m.desc.nl || "") : "";
+      MIXES
+        .filter(function(m){
+          if(isAll) return true;
 
-        card.innerHTML =
-          '<div>' +
-            '<div class="label">' + escapeHtml(title) + '</div>' +
-            '<div class="meta">soundcloud</div>' +
-            (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
-            '<div class="embed ' + (m.size || "") + '">' +
-              '<iframe loading="lazy" allow="autoplay" src="' + scEmbedSrc(m.url) + '"></iframe>' +
-            '</div>' +
-          '</div>';
+          var tags = (m.tags || []);
+          // OR logic: show if mix contains at least one selected tag
+          for(var i=0; i<wanted.length; i++){
+            if(tags.includes(wanted[i])) return true;
+          }
+          return false;
+        })
+        .forEach(function(m){
+          var card = document.createElement("div");
+          card.className = "card player " + (m.tilt || "") + " " + (m.size || "");
 
-        root.appendChild(card);
-      });
+          var title = (m.title && (m.title[lang] || m.title.nl)) || "Mix";
+          var tags = (m.tags || []);
+
+          card.innerHTML =
+            '<div>' +
+              '<div class="label">' + escapeHtml(title) + '</div>' +
+              '<div class="meta">soundcloud</div>' +
+              (tags.length
+                ? '<div class="tags">' + tags.map(function(t){
+                    return '<span class="tag">' + escapeHtml(t) + '</span>';
+                  }).join('') + '</div>'
+                : ''
+              ) +
+              '<div class="embed ' + (m.size || "") + '">' +
+                '<iframe loading="lazy" allow="autoplay" src="' + scEmbedSrc(m.url) + '"></iframe>' +
+              '</div>' +
+            '</div>';
+
+          root.appendChild(card);
+        });
     }
 
     function escapeHtml(str){
@@ -215,15 +315,15 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          dj_label: "YAK",
-          dj_meta: "Online radio shows / mixes",
+          // dj_label: "YAK",
+          dj_label: "MIJN DJ-alias is YAK\n\n ik draai allerlei platen op plekken als Landjuweel festival, zuiderzeeweg, kanaal40, kriterion of radio radio\n\n hier is een selectie van mijn online sets",
           pill_home: "HOME",
           pill_music: "MUZIEK"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          dj_label: "YAK",
-          dj_meta: "Online radio shows / mixes",
+          // dj_label: "YAK",
+          dj_label: "my dj-alias is YAK\n\n i play all kinds of tunes at places like Landjuweel festival, zuiderzeeweg, kanaal40, kriterion or radio radio\n\nhere is a selection of my online sets",
           pill_home: "HOME",
           pill_music: "MUSIC"
         }
@@ -244,7 +344,9 @@
         });
 
         localStorage.setItem("lang", lang);
+        renderFilters(lang);
         renderMixes(lang);
+
       }
 
       var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";

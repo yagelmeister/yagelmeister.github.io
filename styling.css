@@ -320,10 +320,8 @@ html[data-theme="night"] .pill:hover{
   overflow: hidden;
   background: transparent;
 
-  /* zodat je altijd een stabiele hoogte hebt (en dus een “track” kan schuiven) */
-  aspect-ratio: 4 / 3;
-
-  scrollbar-width: none;        /* Firefox */
+  /* fallback ratio als JS nog niet gelopen heeft */
+  aspect-ratio: 16 / 9;
 }
 .slider-frame::-webkit-scrollbar{
   display: none;                /* Chrome/Safari */
@@ -338,14 +336,17 @@ html[data-theme="night"] .pill:hover{
   will-change: transform;
 }
 
+
 /* elke slide is 100% frame-breed */
 .slider-track img{
   flex: 0 0 100%;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* voor “seam” vibes tussen beelden */
+  object-fit: cover;      /* dit is de “zoom/crop vertical” die jij wil */
+  object-position: center;
   display: block;
 }
+
 
 /* geen knoppen/dots meer */
 .slider-controls{ display: none !important; }
@@ -402,11 +403,6 @@ html[data-theme="night"] .slider-hover.right{
   .slider-hover{ display:none; }
 }
 
-/* responsive: iets meer “vierkant” op mobiel */
-@media (max-width: 760px){
-  .slider-frame{ aspect-ratio: 1 / 1; }
-}
-
 /* responsive */
 @media (max-width: 760px){
   .grid{ grid-template-columns: 1fr; }
@@ -434,26 +430,146 @@ html[data-theme="night"] .slider-hover.right{
   /* dit blok wordt praktisch alleen door Safari geraakt */
 }
 
-/* ECHTE Safari-fix: display: contents is buggy in Safari grids */
+
+/* Safari: display: contents is buggy inside CSS Grid (height / spanning collapses).
+   Approach:
+   - Default: #sets-root acts as "transparent" wrapper (display: contents) so its children are grid items of .grid.mosaic.
+   - Safari: turn #sets-root into its OWN grid that mimics .grid.mosaic, and let it span full width.
+*/
+
+/* Default (Firefox/Chromium): children participate in parent grid */
+#sets-root{ display: contents; }
+
+/* Safari-only override */
 @supports (-webkit-touch-callout: none) {
-  /* alleen relevant als je #sets-root display: contents gebruikt */
-  #sets-root{
-    display: block !important;  /* i.p.v. contents */
-  }
 
-  /* maak #sets-root zelf geen “visuele kaart” */
-  #sets-root{
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-
-  /* en laat de cards binnen #sets-root een eigen grid maken die matcht met .grid.mosaic */
+  /* Make #sets-root a grid container that mimics .grid.mosaic */
   #sets-root{
     display: grid !important;
     grid-template-columns: repeat(6, 1fr);
     grid-auto-flow: dense;
     gap: 18px;
+
+    /* This is the key: give Safari deterministic row tracks so span-rows behave */
+    grid-auto-rows: 190px;
+
+    /* Treat it like a "section" inside the parent mosaic grid */
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+
+    /* span full width of the parent grid */
+    grid-column: 1 / -1;
   }
+
+  /* Ensure generated cards actually fill their tracks */
+  #sets-root > .card{
+    height: 100%;
+    align-self: stretch;
+    min-height: 0;
+  }
+  #sets-root > .card.player{
+    overflow: hidden; /* keep slideshow from leaking */
+  }
+
+  /* Inside cards: allow flex children to shrink correctly (WebKit quirk) */
+  #sets-root > .card{
+    min-height: 0;
+  }
+  #sets-root > .card > *{
+    min-height: 0;
+  }
+}
+/* =========================
+   Safari hard override (reliable)
+   If @supports doesn't trigger consistently, add class via JS:
+   <script>
+     document.documentElement.classList.toggle(
+       'is-safari',
+       /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+     );
+   </script>
+   ========================= */
+
+html.is-safari #sets-root{
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-flow: dense;
+  gap: 18px;
+  grid-auto-rows: 190px; /* 2 rows ≈ 380px */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  grid-column: 1 / -1;
+}
+
+html.is-safari #sets-root > .card{
+  height: 100%;
+  align-self: stretch;
+  min-height: 0;
+}
+
+html.is-safari #sets-root > .card.player{
+  overflow: hidden;
+}
+
+html.is-safari .grid.mosaic{
+  align-items: stretch;
+}
+
+/* ====== TAGS (encircled genre chips) ====== */
+.tags{
+  margin-top: 10px;
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag{
+  display:inline-flex;
+  align-items:center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--fg);
+  user-select: none;
+  background-color: transparent; /* default */
+}
+
+/* filter buttons behave like tags, but clickable */
+button.tag.tag-btn{
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--fg);
+  background-color: transparent; /* default */
+  cursor: pointer;
+  user-select: none;
+  transition: transform 160ms ease, background-color 160ms ease;
+  line-height: 1;                /* Safari rendering sanity */
+}
+
+button.tag.tag-btn:hover{
+  transform: translateY(-1px);
+}
+
+.tag.tag-btn.is-selected{
+  background-color: color-mix(
+    in srgb,
+    var(--fg) 40%,
+    transparent
+  );
 }

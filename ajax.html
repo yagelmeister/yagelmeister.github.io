@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yagel.nl – ajax</title>
+  <meta name="description" content="AFC Ajax – onderzoek/publicatie (PDF)." />
+
+  <!-- shared styling -->
+  <link rel="stylesheet" href="styling.css" />
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* page-specific: intro + PDF embed container (same “card/paper” feel) */
+    .content{
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .intro{
+      border: 1.5px solid var(--line);
+      border-radius: 12px 4px 12px 4px;
+      padding: 18px 18px 16px;
+      background: var(--card);
+      position: relative;
+    }
+    .intro::after{
+      content:"";
+      position:absolute;
+      inset: 6px -6px -6px 6px;
+      border: 1px solid var(--line);
+      border-radius: 12px 4px 12px 4px;
+      opacity: 0.16;
+      pointer-events:none;
+    }
+
+    .intro-title{
+      font-family: var(--font-head);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+
+    .intro-text{
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+      white-space: pre-line;
+    }
+
+    .pdf-wrap{
+      border: 1.5px solid var(--line);
+      border-radius: 12px 4px 12px 4px;
+      overflow: hidden;
+      background: var(--card);
+      position: relative;
+    }
+    .pdf-wrap::after{
+      content:"";
+      position:absolute;
+      inset: 6px -6px -6px 6px;
+      border: 1px solid var(--line);
+      border-radius: 12px 4px 12px 4px;
+      opacity: 0.16;
+      pointer-events:none;
+    }
+
+    .pdf-frame{
+      width: 100%;
+      height: 90vh;
+      border: 0;
+      display: block;
+      background: transparent;
+    }
+
+    .pdf-fallback{
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--softline);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .pdf-fallback a{
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 760px){
+      .pdf-frame{ height: 72vh; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar" aria-label="Taal kiezen">
+        <button class="lang-btn" type="button" data-lang="nl" aria-pressed="true">nl</button>
+        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">en</button>
+      </div>
+
+      <div class="name">
+        <a href="home.html" data-i18n="name">YA'GEL SCHOONDERBEEK</a>
+      </div>
+      <div class="rule"></div>
+    </header>
+
+    <main class="content" aria-label="Ajax project">
+      <section class="intro">
+        <h1 class="intro-title" data-i18n="title">AFC Ajax</h1>
+        <p class="intro-text" data-i18n="intro">
+In dit project onderzocht ik beweging en passing patronen in professioneel voetbal.
+De output is deze publicatie, waarin ik de methode en bevindingen uitwerk.
+        </p>
+      </section>
+
+      <section class="pdf-wrap" aria-label="Publicatie PDF">
+        <!-- Update this path to your actual pdf location -->
+        <iframe class="pdf-frame" id="pdfFrame" title="Ajax publication PDF"></iframe>
+
+        <div class="pdf-fallback">
+          <span data-i18n="fallback">Werkt de embedded PDF niet? Download ‘m hier:</span>
+          <a id="pdfDownload" href="#" download data-i18n="download">Download PDF</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="pill" href="data.html" data-i18n="pill_back">DATA</a>
+      <a class="pill" href="home.html" data-i18n="pill_home">HOME</a>
+      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+    </footer>
+  </div>
+
+  <script>
+    /* set PDF path once */
+    (function(){
+      var PDF_SRC = "images/data/ajax/publication.pdf";
+
+      var frame = document.getElementById("pdfFrame");
+      var dl = document.getElementById("pdfDownload");
+
+      if(frame) frame.src = PDF_SRC;
+      if(dl) dl.href = PDF_SRC;
+    })();
+  </script>
+
+  <script>
+    /* theme */
+    (function(){
+      var savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme || "auto");
+    })();
+
+    /* language */
+    (function(){
+      var dict = {
+        nl: {
+          name: "YA'GEL SCHOONDERBEEK",
+          title: "AFC Ajax",
+          intro:
+"In dit project onderzocht ik beweging en passing patronen in professioneel voetbal.\nDe output is deze publicatie, waarin ik de methode en bevindingen uitwerk.",
+          fallback: "Werkt de embedded PDF niet? Download ‘m hier:",
+          download: "Download PDF",
+          pill_home: "HOME",
+          pill_back: "DATA",
+          pill_contact: "CONTACT"
+        },
+        en: {
+          name: "YA'GEL SCHOONDERBEEK",
+          title: "AFC Ajax",
+          intro:
+"In this project I studied movement and passing patterns in professional football.\nThe output is this publication, where I describe the method and findings.",
+          fallback: "If the embedded PDF doesn’t load, download it here:",
+          download: "Download PDF",
+          pill_home: "HOME",
+          pill_back: "DATA",
+          pill_contact: "CONTACT"
+        }
+      };
+
+      function applyLang(lang){
+        var pack = dict[lang] || dict.nl;
+        document.documentElement.lang = lang;
+
+        document.querySelectorAll("[data-i18n]").forEach(function(el){
+          var key = el.getAttribute("data-i18n");
+          if(pack[key]) el.textContent = pack[key];
+        });
+
+        document.querySelectorAll(".lang-btn").forEach(function(btn){
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
+        });
+
+        localStorage.setItem("lang", lang);
+      }
+
+      var initial = localStorage.getItem("lang") || "nl";
+      applyLang(initial);
+
+      document.querySelectorAll(".lang-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          applyLang(btn.getAttribute("data-lang"));
+        });
+      });
+    })();
+
+    /* contact (anti-scrape) */
+    (function(){
+      const user = "yagelschoonderbeek";
+      const domain = "gmail.com";
+      const link = document.getElementById("contactLink");
+
+      if(!link) return;
+      link.addEventListener("click", function(e){
+        e.preventDefault();
+        window.location.href = "mailto:" + user + "@" + domain;
+      });
+    })();
+  </script>
+</body>
+</html>

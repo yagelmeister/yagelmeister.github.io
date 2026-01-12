@@ -53,36 +53,70 @@
 
     var SETS = [
       {
-        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
-        desc:  { nl: "Mijn data-baas kwam mee tortillas maken; van deeg tot salsa.", en: "My data-employer join to make tortillas; from dough to salsa." },
+        title: { nl: "VEGAN SAOTO SOEP", en: "VEGAN SAOTO SOUP" },
+        desc:  { nl: "gekruide kool als vervanger van kip", en: "spiced cabbage as replacement of chicken" },
         photos: [
-          "images/koken/daklozenopvang/tortillas1.jpg",
-          "images/koken/daklozenopvang/tortillas3.jpg",
-          "images/koken/daklozenopvang/tortillas2.jpg"
+          "images/koken/daklozenopvang/saoto/saoto1.jpg",
+          "images/koken/daklozenopvang/saoto/saoto2.jpg",
+          "images/koken/daklozenopvang/saoto/saoto3.jpg",
+          "images/koken/daklozenopvang/saoto/saoto4.jpg",
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-3"
+      },  
+      {
+        title: { nl: "PASTA SAUS MET ISIS", en: "PASTA SAUCE WITH ISIS" },
+        desc:  { nl: "gegrilde tomaten en paprikas in de oven", en: "grilled tomatoes and bell peppers in the oven" },
+        photos: [
+          "images/koken/daklozenopvang/isis saus/saus0.jpg",
+          "images/koken/daklozenopvang/isis saus/saus1.jpg",
+          "images/koken/daklozenopvang/isis saus/saus2.jpg",
+          "images/koken/daklozenopvang/isis saus/saus3.5.jpg",
+          "images/koken/daklozenopvang/isis saus/saus4.jpg",
+          "images/koken/daklozenopvang/isis saus/saus6.jpg",
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-3"
+      },  
+      {
+        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
+        desc:  { nl: "mijn data-baas kwam mee tortillas maken; van deeg tot salsa", en: "my employer of Nidap joined to make tortillas; from dough to salsa" },
+        photos: [
+          "images/koken/daklozenopvang/martijn tortillas/tortillas4.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas5.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas1.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas3.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas2.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas7.jpg",
         ],
         size:  "span-3 row-2",
         tilt:  "tilt-3"
       },
       {
-        title: { nl: "Spatial Sensations", en: "Spatial Sensations" },
-        desc:  { nl: "Onze zintuigen ervaren samen met De Sering.", en: "Experiencing our senses together with De Sering" },
+        title: { nl: "Hamburgers met de papi's", en: "Hamburgers with the papis" },
+        desc:  { nl: "met roel, bart en enrikos 90 hamburgers gemaakt (inclusief de broodjes en mayo)", en: "with roel, bart and enrikos, we made 90 hamburgers (including the breads and mayo)" },
         photos: [
-          "images/muziek/mps/spatial/spatial_01.jpg",
-          "images/muziek/mps/spatial/spatial_02.jpg",
-          "images/muziek/mps/spatial/spatial_03.jpg",
-          "images/muziek/mps/spatial/spatial_04.jpg",
-          "images/muziek/mps/spatial/spatial_05.jpg",
-          "images/muziek/mps/spatial/spatial_06.jpg",
-          "images/muziek/mps/spatial/spatial_07.jpg",
-          "images/muziek/mps/spatial/spatial_08.jpg"
+          "images/koken/daklozenopvang/burgers papi/burger1.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger2.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger4.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger5.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger3.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger6.jpg",
+          "images/koken/daklozenopvang/burgers papi/burger7.jpg",
         ],
         size:  "span-3 row-2",
         tilt:  "tilt-1"
       },
       {
-        title: { nl: "Rita's leefhuis", en: "Rita's living space" },
-        desc:  { nl: "Een bandjes middag in een woonkerk in Amsterdam Noord.", en: "A live-music day in a living space in Amsterdam Noord." },
-        photos: ["images/mps_01.jpg","images/mps_02.jpg","images/mps_03.jpg"],
+        title: { nl: "Degen met marie en jeremy", en: "Dough with marie and jeremy" },
+        desc:  { nl: "de leukste / uitdagende dagen zijn die waar we ook het deeg maken, zoals deze twee verschillende keren", en: "the most fun / challenging days are those where we also make the dough, like these two seperate times" },
+        photos: [
+          "images/koken/daklozenopvang/degen/deeg1.jpg",
+          "images/koken/daklozenopvang/degen/deeg2.jpg",
+          "images/koken/daklozenopvang/degen/deeg3.jpg",
+          "images/koken/daklozenopvang/degen/deeg4.jpg",
+          "images/koken/daklozenopvang/degen/deeg5.jpg",
+        ],
         size:  "span-3 row-2",
         tilt:  "tilt-2"
       }
@@ -159,12 +193,41 @@
       });
 
       wireSliders();
+      autoAspectRatio();
+    }
+
+    function autoAspectRatio(){
+      document.querySelectorAll(".slider-frame").forEach(function(frame){
+        var imgs = Array.from(frame.querySelectorAll("img"));
+        if(!imgs.length) return;
+
+        var waits = imgs.map(function(img){
+          return new Promise(function(resolve){
+            if(img.complete && img.naturalWidth) return resolve();
+            img.addEventListener("load", resolve, { once:true });
+            img.addEventListener("error", resolve, { once:true });
+          });
+        });
+
+        Promise.all(waits).then(function(){
+          var maxRatio = 0;
+          imgs.forEach(function(img){
+            var w = img.naturalWidth || 0;
+            var h = img.naturalHeight || 1;
+            var r = w / h;
+            if(r > maxRatio) maxRatio = r;
+          });
+
+          if(!maxRatio || !isFinite(maxRatio)) maxRatio = 16/9;
+          frame.style.aspectRatio = String(maxRatio);
+        });
+      });
     }
 
     function wireSliders(){
       var SPEED_AUTO = 60;       // px per soconde
       var SPEED_USER = 100;       // px per soconde
-      var AUTO_DELAY = 2000;      // ms wachten na in-beeld komen / mouseleave
+      var AUTO_DELAY = 700;      // ms wachten na in-beeld komen / mouseleave
       var VIEW_THRESHOLD = 1.0;  // hoeveel van de slider in beeld moet zijn
 
       var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
@@ -376,7 +439,7 @@
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
           // intro_label: "DAKLOZENOPVANG DE KLOOF",
-          intro_label: "Elke donderdag kook ik bij De Kloof een maaltijd\nOm 9 uur 's ochtends kom ik aan, inventariseer wat er is en bedenk het menu\n\nVervolgens heb ik 3 uur voor boodschappen en het bereiden\nGelukkig komen vrienden en familie vaak helpen\n\nDit is de plek waar mijn passie voor koken is begonnen.",
+          intro_label: "Elke donderdag kook ik 60 maaltijden bij De Kloof\n\n Tussen 9am en 1pm moet alles gebeuren vanaf nul\nGelukkig komen vrienden en familie vaak helpen\n\nDit is de plek waar mijn passie voor koken is begonnen.",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
@@ -384,7 +447,7 @@
         en: {
           name: "YA'GEL SCHOONDERBEEK",
           // intro_label: "HOMELESS SHELTER DE KLOOF",
-          intro_label: "Every Thursday I cook a meal at De Kloof\nI arrive at 9am, take inventory and formulate a recipe\n\nThen I have 3 hours for shopping and preparations\nLuckily, friends and family often help out\n\nThis is the place where my passion for cooking started",
+          intro_label: "Every Thursday I cook 60 meals at De Kloof\n\nBetween 9am and 1pm, everything has to be done from scratch\nLuckily, friends and family often help out\n\nThis is the place where my passion for cooking started",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
@@ -435,5 +498,82 @@
       });
     })();
   </script>
+
+  <script>
+  (function safariDebug(){
+
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    console.log('%cDEBUG START', 'background:#000;color:#0f0;padding:4px');
+    console.log('Browser:', isSafari ? 'Safari' : 'Not Safari');
+
+    const tiles = document.querySelectorAll('.card, .tile');
+    console.log('Tiles found:', tiles.length);
+
+    tiles.forEach((tile, i) => {
+      const rect = tile.getBoundingClientRect();
+      const style = getComputedStyle(tile);
+
+      console.group(`TILE ${i}`);
+      console.log('height (rect):', rect.height);
+      console.log('scrollHeight:', tile.scrollHeight);
+      console.log('clientHeight:', tile.clientHeight);
+      console.log('display:', style.display);
+      console.log('position:', style.position);
+      console.log('overflow:', style.overflow);
+      console.log('aspect-ratio:', style.aspectRatio);
+      console.log('grid-row:', style.gridRow);
+      console.log('contains slider:', !!tile.querySelector('.slider-frame'));
+      console.groupEnd();
+    });
+
+  })();
+  </script>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.slider-frame').forEach((frame, i) => {
+        const frameRect = frame.getBoundingClientRect();
+        const frameCS = getComputedStyle(frame);
+
+        const track = frame.querySelector('.slider-track, .slides, .slider');
+        const img = frame.querySelector('img, video');
+
+        console.group(`SLIDERFRAME ${i}`);
+        console.log('frame rect h:', frameRect.height);
+        console.log('frame clientHeight:', frame.clientHeight, 'scrollHeight:', frame.scrollHeight);
+        console.log('frame display:', frameCS.display, 'pos:', frameCS.position, 'overflow:', frameCS.overflow);
+        console.log('frame height style:', frameCS.height, 'min-height:', frameCS.minHeight);
+
+        if(track){
+          const tRect = track.getBoundingClientRect();
+          const tCS = getComputedStyle(track);
+          console.log('track rect h:', tRect.height);
+          console.log('track clientHeight:', track.clientHeight, 'scrollHeight:', track.scrollHeight);
+          console.log('track display:', tCS.display, 'pos:', tCS.position, 'height:', tCS.height);
+        } else {
+          console.log('track: NOT FOUND');
+        }
+
+        if(img){
+          const iRect = img.getBoundingClientRect();
+          const iCS = getComputedStyle(img);
+          console.log('media tag:', img.tagName);
+          console.log('media rect h:', iRect.height);
+          console.log('media pos:', iCS.position, 'height:', iCS.height, 'object-fit:', iCS.objectFit);
+        } else {
+          console.log('media: NOT FOUND');
+        }
+
+        console.groupEnd();
+      });
+    }, 800);
+    </script>
+
+    <script>
+      document.documentElement.classList.toggle(
+        'is-safari',
+        /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+      );
+    </script>
 </body>
 </html>

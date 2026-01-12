@@ -46,6 +46,8 @@
   </div>
 
   <script>
+    var IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     (function(){
       var savedTheme = localStorage.getItem("theme");
       document.documentElement.setAttribute("data-theme", savedTheme || "auto");
@@ -53,19 +55,41 @@
 
     var SETS = [
       {
-        title: { nl: "NYE 2024", en: "NYE 2024" },
-        desc:  { nl: "Vlak voor de sloop van zuiderzeeweg", en: "Right before the deconstruction of zuiderzeeweg" },
+        title: { nl: "ADE '24 RAVE", en: "ADE '24 RAVE" },
+        desc:  { nl: "een ontvluchting van de stad en haar commerciele achtbaan", en: "an escape from the city and its commercial rollercoaster" },
         photos: [
-          "images/muziek/mps/nye/night2_01.jpg",
-          "images/muziek/mps/nye/night2_02.jpg",
-          "images/muziek/mps/nye/night2_03.jpg"
+          "images/muziek/mps/rave/mps_rave_1_01.png",
+          "images/muziek/mps/rave/mps_rave_1_02.png",
+          "images/muziek/mps/rave/mps_rave_1_03.png",
+          "images/muziek/mps/rave/mps_rave_1_04.png",
+          "images/muziek/mps/rave/mps_rave_1_05.png",
+          "images/muziek/mps/rave/mps_rave_1_06.png",
+          "images/muziek/mps/rave/mps_rave_1_07.png",
         ],
         size:  "span-3 row-2",
-        tilt:  "tilt-3"
+        tilt:  "tilt-2"
+      },
+      {
+        title: { nl: "Zuiderzeeweg festival '24", en: "Zuiderzeeweg festival '24" },
+        desc:  { nl: "het allerlaaste zuiderzeeweg festival was de legendarische start van mps", en: "the very last zuiderzeeweg festival was the legendary start of mps" },
+        photos: [
+          "images/muziek/mps/zzw/NIGHT-01.PNG",
+          "images/muziek/mps/zzw/NIGHT-02.PNG",
+          "images/muziek/mps/zzw/NIGHT-03.PNG",
+          "images/muziek/mps/zzw/NIGHT-04.PNG",
+          "images/muziek/mps/zzw/NIGHT-05.PNG",
+          "images/muziek/mps/zzw/DAY-02.PNG",
+          "images/muziek/mps/zzw/DAY-03.PNG",
+          "images/muziek/mps/zzw/DAY-04.PNG",
+          "images/muziek/mps/zzw/DAY-05.PNG",
+          "images/muziek/mps/zzw/DAY-06.PNG",
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-2"
       },
       {
         title: { nl: "Spatial Sensations", en: "Spatial Sensations" },
-        desc:  { nl: "Onze zintuigen ervaren samen met De Sering.", en: "Experiencing our senses together with De Sering" },
+        desc:  { nl: "onze zintuigen ervaren samen met de sering", en: "experiencing our senses together with de sering" },
         photos: [
           "images/muziek/mps/spatial/spatial_01.jpg",
           "images/muziek/mps/spatial/spatial_02.jpg",
@@ -79,6 +103,17 @@
         size:  "span-3 row-2",
         tilt:  "tilt-1"
       },
+      {
+        title: { nl: "NYE 2024", en: "NYE 2024" },
+        desc:  { nl: "een emotioneel afscheid aan het gesloopte zuiderzeeweg", en: "an emotional goodbye to the deconstructed zuiderzeeweg" },
+        photos: [
+          "images/muziek/mps/nye/night2_01.jpg",
+          "images/muziek/mps/nye/night2_02.jpg",
+          "images/muziek/mps/nye/night2_03.jpg"
+        ],
+        size:  "span-3 row-2",
+        tilt:  "tilt-3"
+      },
       // {
       //   title: { nl: "Rita's leefhuis", en: "Rita's living space" },
       //   desc:  { nl: "Een bandjes middag in een woonkerk in Amsterdam Noord.", en: "A live-music day in a living space in Amsterdam Noord." },
@@ -88,7 +123,7 @@
       // },
       {
         title: { nl: "La Salinié Festival '25", en: "La Salinié Festival '25" },
-        desc:  { nl: "Een hotte viering van co-creatie.", en: "A hot celebration of co-creation." },
+        desc:  { nl: "een hete viering van co-creatie", en: "a hot celebration of co-creation" },
         photos: [
           "images/muziek/mps/salinie/salinie2_01.jpg",
           "images/muziek/mps/salinie/salinie2_02.jpg",
@@ -104,39 +139,6 @@
         size:  "span-3 row-2",
         tilt:  "tilt-2"
       },
-      {
-        title: { nl: "Onze allereerste rave", en: "Our first ever rave" },
-        desc:  { nl: "Ondergronds buiten de stad tijdens ADE '24.", en: "Underground outside the city during ADE '24'." },
-        photos: [
-          "images/muziek/mps/rave/mps_rave_1_01.png",
-          "images/muziek/mps/rave/mps_rave_1_02.png",
-          "images/muziek/mps/rave/mps_rave_1_03.png",
-          "images/muziek/mps/rave/mps_rave_1_04.png",
-          "images/muziek/mps/rave/mps_rave_1_05.png",
-          "images/muziek/mps/rave/mps_rave_1_06.png",
-          "images/muziek/mps/rave/mps_rave_1_07.png",
-        ],
-        size:  "span-3 row-2",
-        tilt:  "tilt-2"
-      },
-      {
-        title: { nl: "Zuiderzeeweg festival '24", en: "Zuiderzeeweg festival '24" },
-        desc:  { nl: "Het allerlaaste Zuiderzeeweg festival was legendarischer dan ooit.", en: "The very last Zuiderzeeweg festival was also the most legendary one." },
-        photos: [
-          "images/muziek/mps/zzw/NIGHT-01.PNG",
-          "images/muziek/mps/zzw/NIGHT-02.PNG",
-          "images/muziek/mps/zzw/NIGHT-03.PNG",
-          "images/muziek/mps/zzw/NIGHT-04.PNG",
-          "images/muziek/mps/zzw/NIGHT-05.PNG",
-          "images/muziek/mps/zzw/DAY-02.PNG",
-          "images/muziek/mps/zzw/DAY-03.PNG",
-          "images/muziek/mps/zzw/DAY-04.PNG",
-          "images/muziek/mps/zzw/DAY-05.PNG",
-          "images/muziek/mps/zzw/DAY-06.PNG",
-        ],
-        size:  "span-3 row-2",
-        tilt:  "tilt-2"
-      }
     ];
 
     function escapeHtml(str){
@@ -158,9 +160,18 @@
       if(!root) return;
       root.innerHTML = "";
 
+      // remove previously rendered set cards (important because in Safari we move them out of #sets-root)
+      var parentGrid = root.parentElement;
+      parentGrid.querySelectorAll('.card.player[data-set-card="1"]').forEach(function(n){
+        n.remove();
+      });
+
+
       SETS.forEach(function(s, idx){
         var card = document.createElement("div");
+        card.setAttribute("data-set-card", "1");
         card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
+        
 
         var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
         var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
@@ -208,15 +219,52 @@
 
 
         root.appendChild(card);
+
+        // SAFARI: unwrap cards from #sets-root so they are direct grid children
+        if(IS_SAFARI){
+          while(root.firstChild){
+            parentGrid.insertBefore(root.firstChild, root); // move cards before the marker
+          }
+        }
       });
 
       wireSliders();
+      autoAspectRatio();
     }
+
+  function autoAspectRatio(){
+    document.querySelectorAll(".slider-frame").forEach(function(frame){
+      var imgs = Array.from(frame.querySelectorAll("img"));
+      if(!imgs.length) return;
+
+      var waits = imgs.map(function(img){
+        return new Promise(function(resolve){
+          if(img.complete && img.naturalWidth) return resolve();
+          img.addEventListener("load", resolve, { once:true });
+          img.addEventListener("error", resolve, { once:true });
+        });
+      });
+
+      Promise.all(waits).then(function(){
+        var maxRatio = 0;
+        imgs.forEach(function(img){
+          var w = img.naturalWidth || 0;
+          var h = img.naturalHeight || 1;
+          var r = w / h;
+          if(r > maxRatio) maxRatio = r;
+        });
+
+        if(!maxRatio || !isFinite(maxRatio)) maxRatio = 16/9;
+        frame.style.aspectRatio = String(maxRatio);
+      });
+    });
+  }
+
 
    function wireSliders(){
       var SPEED_AUTO = 60;       // px per soconde
       var SPEED_USER = 100;       // px per soconde
-      var AUTO_DELAY = 2000;      // ms wachten na in-beeld komen / mouseleave
+      var AUTO_DELAY = 700;      // ms wachten na in-beeld komen / mouseleave
       var VIEW_THRESHOLD = 1.0;  // hoeveel van de slider in beeld moet zijn
 
       var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
@@ -436,7 +484,7 @@
         en: {
           name: "YA'GEL SCHOONDERBEEK",
           mps_meta: "MPSOUNDSYSTEM",
-          mps_label: "MPSOUNDSYSTEM is a collective that looks to create (music) culture together as a community\n\nBy upcycling second hand gear from the infamous marktplaats, culture (e.g. outdoor cinema's, festival stages or conceptual dinners) becomes (financially) accessible",
+          mps_label: "MPSOUNDSYSTEM is a collective that looks to create (music) culture together as a community\n\nBy upcycling second hand gear from the infamous marktplaats, culture such as outdoor cinema's, festival stages or conceptual dinners become (financially) accessible",
           pill_home: "HOME",
           pill_music: "MUSIC",
           pill_contact: "CONTACT"
@@ -487,5 +535,82 @@
       });
     })();
   </script>
+
+  <script>
+  (function safariDebug(){
+
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    console.log('%cDEBUG START', 'background:#000;color:#0f0;padding:4px');
+    console.log('Browser:', isSafari ? 'Safari' : 'Not Safari');
+
+    const tiles = document.querySelectorAll('.card, .tile');
+    console.log('Tiles found:', tiles.length);
+
+    tiles.forEach((tile, i) => {
+      const rect = tile.getBoundingClientRect();
+      const style = getComputedStyle(tile);
+
+      console.group(`TILE ${i}`);
+      console.log('height (rect):', rect.height);
+      console.log('scrollHeight:', tile.scrollHeight);
+      console.log('clientHeight:', tile.clientHeight);
+      console.log('display:', style.display);
+      console.log('position:', style.position);
+      console.log('overflow:', style.overflow);
+      console.log('aspect-ratio:', style.aspectRatio);
+      console.log('grid-row:', style.gridRow);
+      console.log('contains slider:', !!tile.querySelector('.slider-frame'));
+      console.groupEnd();
+    });
+
+  })();
+  </script>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.slider-frame').forEach((frame, i) => {
+        const frameRect = frame.getBoundingClientRect();
+        const frameCS = getComputedStyle(frame);
+
+        const track = frame.querySelector('.slider-track, .slides, .slider');
+        const img = frame.querySelector('img, video');
+
+        console.group(`SLIDERFRAME ${i}`);
+        console.log('frame rect h:', frameRect.height);
+        console.log('frame clientHeight:', frame.clientHeight, 'scrollHeight:', frame.scrollHeight);
+        console.log('frame display:', frameCS.display, 'pos:', frameCS.position, 'overflow:', frameCS.overflow);
+        console.log('frame height style:', frameCS.height, 'min-height:', frameCS.minHeight);
+
+        if(track){
+          const tRect = track.getBoundingClientRect();
+          const tCS = getComputedStyle(track);
+          console.log('track rect h:', tRect.height);
+          console.log('track clientHeight:', track.clientHeight, 'scrollHeight:', track.scrollHeight);
+          console.log('track display:', tCS.display, 'pos:', tCS.position, 'height:', tCS.height);
+        } else {
+          console.log('track: NOT FOUND');
+        }
+
+        if(img){
+          const iRect = img.getBoundingClientRect();
+          const iCS = getComputedStyle(img);
+          console.log('media tag:', img.tagName);
+          console.log('media rect h:', iRect.height);
+          console.log('media pos:', iCS.position, 'height:', iCS.height, 'object-fit:', iCS.objectFit);
+        } else {
+          console.log('media: NOT FOUND');
+        }
+
+        console.groupEnd();
+      });
+    }, 800);
+    </script>
+
+    <script>
+      document.documentElement.classList.toggle(
+        'is-safari',
+        /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+      );
+    </script>
 </body>
 </html>
