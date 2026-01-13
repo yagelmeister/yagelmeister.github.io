@@ -6,6 +6,9 @@
       var lang = localStorage.getItem("yagel_lang") || "en";
       document.documentElement.setAttribute("data-lang", lang);
       document.documentElement.lang = lang;
+
+      console.log(lang)
+      console.log(document.documentElement.lang)
     })();
   </script>
   <link rel="stylesheet" href="styling.css" />
@@ -103,7 +106,7 @@
         }
       };
 
-      function applyLang(lang){
+      window.applyLang = function(lang){
         var pack = dict[lang] || dict.nl;
 
         // DOM state (for CSS hooks)
@@ -128,7 +131,7 @@
         localStorage.setItem("yagel_lang", lang);
       }
 
-      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";
       applyLang(initial);
 

@@ -142,7 +142,7 @@
         localStorage.setItem("yagel_lang", lang);
       }
 
-      var initial = localStorage.getItem("lang") || "nl";
+      var initial = localStorage.getItem("yagel_lang") || "nl";
       applyLang(initial);
 
       document.querySelectorAll(".lang-btn").forEach(function(btn){

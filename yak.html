@@ -348,15 +348,19 @@
       }
 
 
-      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";
 
       // render once on load
       applyLang(initial);
+      renderFilters(initial);
+      renderMixes(initial);
 
       document.querySelectorAll(".lang-btn").forEach(function(btn){
         btn.addEventListener("click", function(){
           applyLang(btn.getAttribute("data-lang"));
+          // renderFilters("data-lang");
+          // renderMixes("data-lang");
         });
       });
     })();

@@ -507,9 +507,15 @@
 
         // Persistence across pages
         localStorage.setItem("yagel_lang", lang);
+
+        // remove previously rendered set cards
+        document.querySelectorAll('[data-set-card="1"]').forEach(el => el.remove());
+
+        // then render in the chosen lang
+        renderSets(lang);
       }
 
-      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";
 
       applyLang(initial);
@@ -536,81 +542,5 @@
     })();
   </script>
 
-  <script>
-  (function safariDebug(){
-
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    console.log('%cDEBUG START', 'background:#000;color:#0f0;padding:4px');
-    console.log('Browser:', isSafari ? 'Safari' : 'Not Safari');
-
-    const tiles = document.querySelectorAll('.card, .tile');
-    console.log('Tiles found:', tiles.length);
-
-    tiles.forEach((tile, i) => {
-      const rect = tile.getBoundingClientRect();
-      const style = getComputedStyle(tile);
-
-      console.group(`TILE ${i}`);
-      console.log('height (rect):', rect.height);
-      console.log('scrollHeight:', tile.scrollHeight);
-      console.log('clientHeight:', tile.clientHeight);
-      console.log('display:', style.display);
-      console.log('position:', style.position);
-      console.log('overflow:', style.overflow);
-      console.log('aspect-ratio:', style.aspectRatio);
-      console.log('grid-row:', style.gridRow);
-      console.log('contains slider:', !!tile.querySelector('.slider-frame'));
-      console.groupEnd();
-    });
-
-  })();
-  </script>
-
-  <script>
-    setTimeout(() => {
-      document.querySelectorAll('.slider-frame').forEach((frame, i) => {
-        const frameRect = frame.getBoundingClientRect();
-        const frameCS = getComputedStyle(frame);
-
-        const track = frame.querySelector('.slider-track, .slides, .slider');
-        const img = frame.querySelector('img, video');
-
-        console.group(`SLIDERFRAME ${i}`);
-        console.log('frame rect h:', frameRect.height);
-        console.log('frame clientHeight:', frame.clientHeight, 'scrollHeight:', frame.scrollHeight);
-        console.log('frame display:', frameCS.display, 'pos:', frameCS.position, 'overflow:', frameCS.overflow);
-        console.log('frame height style:', frameCS.height, 'min-height:', frameCS.minHeight);
-
-        if(track){
-          const tRect = track.getBoundingClientRect();
-          const tCS = getComputedStyle(track);
-          console.log('track rect h:', tRect.height);
-          console.log('track clientHeight:', track.clientHeight, 'scrollHeight:', track.scrollHeight);
-          console.log('track display:', tCS.display, 'pos:', tCS.position, 'height:', tCS.height);
-        } else {
-          console.log('track: NOT FOUND');
-        }
-
-        if(img){
-          const iRect = img.getBoundingClientRect();
-          const iCS = getComputedStyle(img);
-          console.log('media tag:', img.tagName);
-          console.log('media rect h:', iRect.height);
-          console.log('media pos:', iCS.position, 'height:', iCS.height, 'object-fit:', iCS.objectFit);
-        } else {
-          console.log('media: NOT FOUND');
-        }
-
-        console.groupEnd();
-      });
-    }, 800);
-    </script>
-
-    <script>
-      document.documentElement.classList.toggle(
-        'is-safari',
-        /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-      );
-    </script>
 </body>
 </html>

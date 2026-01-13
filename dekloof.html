@@ -71,7 +71,7 @@
         tilt:  "tilt-3"
       },  
       {
-        title: { nl: "PASTA SAUS MET ISIS", en: "PASTA SAUCE WITH ISIS" },
+        title: { nl: "PASTASAUS MET ISIS", en: "PASTA SAUCE WITH ISIS" },
         desc:  { nl: "gegrilde tomaten en paprikas in de oven", en: "grilled tomatoes and bell peppers in the oven" },
         photos: [
           "images/koken/daklozenopvang/isis saus/saus0.jpg",
@@ -85,7 +85,7 @@
       },  
       {
         title: { nl: "Hamburgers met de papi's", en: "Hamburgers with the papis" },
-        desc:  { nl: "met roel, bart en enrikos 90 hamburgers gemaakt (inclusief de broodjes en mayo)", en: "with roel, bart and enrikos, we made 90 hamburgers (including the breads and mayo)" },
+        desc:  { nl: "een speciale zomergrill georganiseerd met roel, bart en enrikos; 100 hamburgers inclusief zelfgemaakte friet, broodjes en mayo", en: "a special summer grill organised with roel, bart and enrikos: 100 burgers including homemade fries, buns and mayo" },
         photos: [
           "images/koken/daklozenopvang/burgers papi/burger1.jpg",
           "images/koken/daklozenopvang/burgers papi/burger2.jpg",
@@ -99,7 +99,7 @@
       },
       {
         title: { nl: "René", en: "René" },
-        desc:  { nl: "blij met gedoneerd zuurdesem brood van de bakker", en: "happy with the donated sourdough bread from the bakery" },
+        desc:  { nl: "blij met gedoneerd zuurdesem brood van de bakker", en: "happy with donated sourdough bread from the bakery" },
         photos: [
           "images/koken/daklozenopvang/rene brood.jpg",
         ],
@@ -155,6 +155,7 @@
       SETS.forEach(function(s, idx){
         var card = document.createElement("div");
         card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
+        card.setAttribute("data-set-card", "1");
 
         var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
         var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
@@ -488,9 +489,15 @@
 
         // Persistence across pages
         localStorage.setItem("yagel_lang", lang);
+
+        // remove previously rendered set cards
+        document.querySelectorAll('[data-set-card="1"]').forEach(el => el.remove());
+
+        // then render in the chosen lang
+        renderSets(lang);
       }
 
-      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";
 
       applyLang(initial);

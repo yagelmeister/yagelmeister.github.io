@@ -8,6 +8,7 @@
       document.documentElement.lang = lang;
 
       console.log(lang)
+      console.log(document.documentElement.lang)
     })();
   </script>
   <meta charset="utf-8" />
@@ -61,7 +62,7 @@
           <!-- Radio -->
       <a class="card tilt-2" href="yak.html">
         <div>
-          <img src="images/muziek/yak/RADIO_cover.png" alt="" class="card-image" />
+          <img src="images/muziek/yak/flotg.jpg" alt="" class="card-image" />
           <div class="label" data-i18n="radio_label">YAK</div>
           <div class="meta" data-i18n="radio_meta">deejaying both solo and with a live percussionist; find my gigs & online radio shows here</div>
         </div>
@@ -70,7 +71,7 @@
       <!-- MP Sound System -->
       <a class="card tilt-3" href="mps.html">
         <div>
-          <img src="images/muziek/mps/P1150685.png" alt="" class="card-image" />
+          <img src="images/muziek/mps/P1150685.jpg" alt="" class="card-image" />
           <div class="label" data-i18n="mp_label">MPSOUNDSYSTEM</div>
           <div class="meta" data-i18n="mp_meta">organising a great diversity of culture that ranges from outdoor cinema's to festival podia to conceptual dinners</div>
         </div>
@@ -152,7 +153,7 @@
       }
 
 
-      var initial = localStorage.getItem("lang") || "nl";
+      var initial = localStorage.getItem("yagel_lang") || "nl";
       applyLang(initial);
 
       document.querySelectorAll(".lang-btn").forEach(function(btn){

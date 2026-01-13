@@ -614,7 +614,7 @@
         localStorage.setItem("yagel_lang", lang);
       }
 
-      var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";
       applyLang(initial);
 
