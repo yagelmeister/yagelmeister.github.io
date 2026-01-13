@@ -1,6 +1,13 @@
 <!doctype html>
-<html lang="nl">
+<html>
 <head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>yagel.nl - radio</title>
@@ -22,17 +29,6 @@
       grid-auto-flow: dense;
       gap: 18px;
     }
-
-    /* mosaic sizes */
-    .span-2{ grid-column: span 2; }
-    .span-3{ grid-column: span 3; }
-    .span-4{ grid-column: span 4; }
-    .span-5{ grid-column: span 5; }
-    .span-6{ grid-column: span 6; }
-    .row-1{ grid-row: span 1; }
-    .row-2{ grid-row: span 2; }
-    .row-3{ grid-row: span 3; }
-    .row-4{ grid-row: span 4; }
 
     /* embed block inside a card */
     .embed{
@@ -91,30 +87,25 @@
       <div class="rule"></div>
     </header>
 
-    <main class="grid mosaic" aria-label="DJ sets">
-      <!-- filter tile -->
-      <div class="card tilt-2 span-6 row-1">
-        <div>
-          <div class="label">FILTER</div>
-          <div class="meta">genres</div>
-          <div class="tags" id="filters-root" aria-label="Filter sets"></div>
-        </div>
-      </div>
-
-      <!-- intro tile -->
-      <div class="card tilt-1 span-3 row-1">
-        <div>
+   <main class="masonry" aria-label="DJ sets">
+      <div id="col-a" class="masonry-col">
+        <div class="card intro tilt-1">
           <div class="label" data-i18n="dj_label">YAK</div>
-          <!-- <div class="meta" data-i18n="dj_meta">Een selectie van mijn radio shows en mixes.</div> -->
+          <div class="meta" data-i18n="dj_meta">YAK</div>
         </div>
       </div>
 
-      
-
-      <!-- container where mixes will be rendered -->
-      <div id="mixes-root" style="display: contents;"></div>
-
+      <div id="col-b" class="masonry-col">
+        <div class="card player tilt-2">
+          <div>
+            <div class="label">FILTER</div>
+            <div class="meta">genres</div>
+            <div class="tags" id="filters-root" aria-label="Filter sets"></div>
+          </div>
+        </div>
+      </div>
     </main>
+
 
     <footer>
       <a class="pill" href="music.html" data-i18n="pill_music">MUZIEK</a>
@@ -137,11 +128,6 @@
       - title: { nl: "...", en: "..." }
       - desc:  { nl: "...", en: "..." }  (optional)
       - url: SoundCloud set/track url
-      - size: layout + player height classes (mosaic)
-        Examples:
-          "span-2 row-1 sc-h-sm"
-          "span-3 row-2 sc-h-md"
-          "span-4 row-2 sc-h-lg"
     */
     var MIXES = [
       
@@ -150,7 +136,6 @@
         // desc:  { nl: "Progressive- en trance house.", en: "Progressive- en trance house." },
         tags:  ["progressive", "trance house"],
         url:   "https://soundcloud.com/radioradiofm/rrfm-o-yak-o-18-12-2025",
-        size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-2"
       },
       {
@@ -158,7 +143,6 @@
         // desc:  { nl: "slow jams, groove en balearica", en: "slow jams, groove and balearica" },
         tags:  ["slow jams", "groove", "balearica"],
         url:   "https://soundcloud.com/radiotemponaopara/yak-15-11-2024",
-        size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-1"
       },
       {
@@ -166,7 +150,6 @@
         // desc:  { nl: "Progressive- en trance house.", en: "Progressive- en trance house." },
         tags:  ["progressive", "trance house"],
         url:   "https://soundcloud.com/radioradiofm/rrfm-yak-22-01-2025",
-        size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-2"
       },
       {
@@ -174,15 +157,25 @@
         // desc:  { nl: "Progressive- en 90s house", en: "Progressive- and 90s house" },
         tags:  ["progressive", "90s house"],
         url:   "https://soundcloud.com/ditisstudiok/yak-26012024",
-        size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-2"
+      },
+      {
+        title: { nl: "Slim Radio — 02.04.2024", en: "Slim Radio — 02.04.2024" },
+        tags:  ["dub", "slow jams", "mid tempo"],
+        url:   "https://soundcloud.com/slimradio/floating-on-the-groove-with-yak-020424",
+        tilt:  "tilt-1"
       },
       {
         title: { nl: "Radio TNP — 03.09.2022", en: "Radio TNP — 03.09.2022" },
         // desc:  { nl: "World en funk; Mijn allereerste radio show :——)", en: "World and funk; My very first radio show :——)" },
         tags:  ["world", "groove", "radio debut"],
         url:   "https://soundcloud.com/radiotemponaopara/yak-03-09-2022",
-        size:  "span-3 row-2 sc-h-sm",
+        tilt:  "tilt-1"
+      },
+      {
+        title: { nl: "Slim Radio — 20.02.2024", en: "Slim Radio — 20.02.2024" },
+        tags:  ["dub", "ambient", "mid tempo"],
+        url:   "https://soundcloud.com/slimradio/floating-on-the-groove-200224",
         tilt:  "tilt-1"
       },
       {
@@ -190,7 +183,6 @@
         // desc:  { nl: "House en stampot bij de daklozenopvang", en: "House and 'stampot' at the homeless shelter" },
         tags:  ["90s house", "stampot"],
         url:   "https://soundcloud.com/radio80000/appetizer-w-yak-yagel-100924",
-        size:  "span-3 row-2 sc-h-sm",
         tilt:  "tilt-3"
       }
     ];
@@ -257,9 +249,10 @@
     }
 
     function renderMixes(lang){
-      var root = document.getElementById("mixes-root");
-      if(!root) return;
-      root.innerHTML = "";
+      var colA = document.getElementById('col-a');
+      if(!colA) return;
+      var colB = document.getElementById('col-b');
+      if(!colB) return;
 
       var isAll = activeTags.has("all");
       var wanted = Array.from(activeTags); // selected tags
@@ -297,7 +290,7 @@
               '</div>' +
             '</div>';
 
-          root.appendChild(card);
+          ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
         });
     }
 
@@ -315,15 +308,15 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          // dj_label: "YAK",
-          dj_label: "MIJN DJ-alias is YAK\n\n ik draai allerlei platen op plekken als Landjuweel festival, zuiderzeeweg, kanaal40, kriterion of radio radio\n\n hier is een selectie van mijn online sets",
+          dj_label: "YAK",
+          dj_meta: "onder deze DJ-alias draai allerlei platen op plekken als Landjuweel festival, zuiderzeeweg, kanaal40, kriterion of radio radio\n\n hier is een selectie van mijn online sets",
           pill_home: "HOME",
           pill_music: "MUZIEK"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          // dj_label: "YAK",
-          dj_label: "my dj-alias is YAK\n\n i play all kinds of tunes at places like Landjuweel festival, zuiderzeeweg, kanaal40, kriterion or radio radio\n\nhere is a selection of my online sets",
+          dj_label: "YAK",
+          dj_meta: "under this dj-alias, i play all kinds of tunes at places like Landjuweel festival, zuiderzeeweg, kanaal40, kriterion or radio radio\n\nhere is a selection of my online sets",
           pill_home: "HOME",
           pill_music: "MUSIC"
         }
@@ -331,23 +324,29 @@
 
       function applyLang(lang){
         var pack = dict[lang] || dict.nl;
-        document.documentElement.lang = lang;
 
+        // DOM state (for CSS hooks)
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
         document.querySelectorAll("[data-i18n]").forEach(function(el){
           var key = el.getAttribute("data-i18n");
           if(pack[key]) el.textContent = pack[key];
         });
 
+        // Toggle button state
         document.querySelectorAll(".lang-btn").forEach(function(btn){
-          var isOn = btn.getAttribute("data-lang") === lang;
-          btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
         });
 
-        localStorage.setItem("lang", lang);
-        renderFilters(lang);
-        renderMixes(lang);
-
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
       }
+
 
       var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
       if(!dict[initial]) initial = "nl";

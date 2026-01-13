@@ -1,8 +1,15 @@
 <!doctype html>
-<html lang="nl">
+<html>
 <head>
-    <link rel="stylesheet" href="styling.css" />
-<meta charset="utf-8" />
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
+  <link rel="stylesheet" href="styling.css" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>yagel.nl</title>
   <meta name="description" content="Portfolio en CV van YA'GEL SCHOONDERBEEK: Data, Koken, Muziek." />
@@ -98,18 +105,27 @@
 
       function applyLang(lang){
         var pack = dict[lang] || dict.nl;
+
+        // DOM state (for CSS hooks)
         document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
         document.querySelectorAll("[data-i18n]").forEach(function(el){
           var key = el.getAttribute("data-i18n");
           if(pack[key]) el.textContent = pack[key];
         });
 
+        // Toggle button state
         document.querySelectorAll(".lang-btn").forEach(function(btn){
-          var isOn = btn.getAttribute("data-lang") === lang;
-          btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
         });
 
-        localStorage.setItem("lang", lang);
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
       }
 
       var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";

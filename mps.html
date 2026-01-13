@@ -1,6 +1,13 @@
 <!doctype html>
-<html lang="nl">
+<html>
 <head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>yagel.nl - mps</title>
@@ -27,15 +34,15 @@
       <div class="rule"></div>
     </header>
 
-    <main class="grid mosaic" aria-label="mpsoundsystem">
-      <div class="card tilt-1 span-3 row-1">
-        <div>
+    <main class="masonry" aria-label="mpsoundsystem">
+      <div id="col-a" class="masonry-col">
+        <!-- put the intro tile here -->
+        <div class="card intro tilt-1">
           <div class="label" data-i18n="mps_label">MPSOUNDSYSTEM</div>
-          <!-- <div class="meta" data-i18n="mps_meta">I co-founded A collective that looks to create (music) culture together as a community. By upcycling second hand gear, culture is made (financially) accessible</div> -->
+          <div class="meta" data-i18n="mps_meta">I co-founded A collective that looks to create (music) culture together as a community. By upcycling second hand gear, culture is made (financially) accessible</div>
         </div>
       </div>
-
-      <div id="sets-root" style="display: contents;"></div>
+      <div id="col-b" class="masonry-col"></div>
     </main>
 
     <footer>
@@ -156,15 +163,10 @@
     };
 
     function renderSets(lang){
-      var root = document.getElementById("sets-root");
-      if(!root) return;
-      root.innerHTML = "";
-
-      // remove previously rendered set cards (important because in Safari we move them out of #sets-root)
-      var parentGrid = root.parentElement;
-      parentGrid.querySelectorAll('.card.player[data-set-card="1"]').forEach(function(n){
-        n.remove();
-      });
+      var colA = document.getElementById('col-a');
+      if(!colA) return;
+      var colB = document.getElementById('col-b');
+      if(!colB) return;
 
 
       SETS.forEach(function(s, idx){
@@ -216,16 +218,7 @@
 
           '</div>';
 
-
-
-        root.appendChild(card);
-
-        // SAFARI: unwrap cards from #sets-root so they are direct grid children
-        if(IS_SAFARI){
-          while(root.firstChild){
-            parentGrid.insertBefore(root.firstChild, root); // move cards before the marker
-          }
-        }
+        ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
       });
 
       wireSliders();
@@ -475,16 +468,16 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          mps_meta: "MPSOUNDSYSTEM",
-          mps_label: "MPSOUNDSYSTEM is een collectief om samen als een community (muziek)cultuur te maken. Door tweedehands gear van marktplaats te upcyclen, wordt cultuur laagdrempelig en (financieel) toegankelijk",
+          mps_label: "MPSOUNDSYSTEM",
+          mps_meta: "is een collectief om samen als een community (muziek)cultuur te maken. Door tweedehands gear van marktplaats te upcyclen, wordt cultuur laagdrempelig en (financieel) toegankelijk",
           pill_home: "HOME",
           pill_music: "MUZIEK",
           pill_contact: "CONTACT"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          mps_meta: "MPSOUNDSYSTEM",
-          mps_label: "MPSOUNDSYSTEM is a collective that looks to create (music) culture together as a community\n\nBy upcycling second hand gear from the infamous marktplaats, culture such as outdoor cinema's, festival stages or conceptual dinners become (financially) accessible",
+          mps_label: "MPSOUNDSYSTEM",
+          mps_meta: "is a collective that looks to create (music) culture together as a community\n\nBy upcycling second hand gear from the infamous marktplaats, culture such as outdoor cinema's, festival stages or conceptual dinners become (financially) accessible",
           pill_home: "HOME",
           pill_music: "MUSIC",
           pill_contact: "CONTACT"
@@ -493,20 +486,27 @@
 
       function applyLang(lang){
         var pack = dict[lang] || dict.nl;
-        document.documentElement.lang = lang;
 
+        // DOM state (for CSS hooks)
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
         document.querySelectorAll("[data-i18n]").forEach(function(el){
           var key = el.getAttribute("data-i18n");
           if(pack[key]) el.textContent = pack[key];
         });
 
+        // Toggle button state
         document.querySelectorAll(".lang-btn").forEach(function(btn){
-          var isOn = btn.getAttribute("data-lang") === lang;
-          btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
         });
 
-        localStorage.setItem("lang", lang);
-        renderSets(lang);
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
       }
 
       var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";

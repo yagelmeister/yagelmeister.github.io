@@ -275,22 +275,32 @@ html[data-theme="night"] .pill:hover{
   background: rgba(255,255,255,0.06);
 }
 
-/* ====== MOSAIC GRID (shared component) ====== */
-.grid.mosaic{
-  grid-template-columns: repeat(6, 1fr);
-  grid-auto-flow: dense;
-  gap: 18px;
+/* kill grid span helpers (harmless, but keep them dead) */
+.span-2,.span-3,.span-4,
+.row-1,.row-2,.row-3,.row-4,.row-5{
+  grid-column: auto !important;
+  grid-row: auto !important;
 }
-.span-2{ grid-column: span 2; }
-.span-3{ grid-column: span 3; }
-.span-4{ grid-column: span 4; }
-.row-1{ grid-row: span 1; }
-.row-2{ grid-row: span 2; }
 
 /* cards that contain media/players */
 .card.player{
-  justify-content:flex-start;
+  justify-content: flex-start;
   min-height: 0;
+}
+
+/* ====== MASONRY (2 columns, no grid, no gaps) ====== */
+.masonry{
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.masonry-col{
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 /* description text used in radio/mps style pages */
@@ -389,7 +399,6 @@ html[data-theme="night"] .pill:hover{
   pointer-events: auto;
 }
 
-
 /* in night theme: witachtige overlay */
 html[data-theme="night"] .slider-hover.left{
   background: linear-gradient(to right, rgba(255,255,255,0.10), rgba(255,255,255,0.00));
@@ -425,100 +434,8 @@ html[data-theme="night"] .slider-hover.right{
   .card:hover{ transform: rotate(var(--tilt, 0deg)); }
 }
 
-/* Safari fallback voor display: contents in grid */
-@supports (-webkit-hyphens: none) and (not (display: contents)) {
-  /* dit blok wordt praktisch alleen door Safari geraakt */
-}
-
-
-/* Safari: display: contents is buggy inside CSS Grid (height / spanning collapses).
-   Approach:
-   - Default: #sets-root acts as "transparent" wrapper (display: contents) so its children are grid items of .grid.mosaic.
-   - Safari: turn #sets-root into its OWN grid that mimics .grid.mosaic, and let it span full width.
-*/
-
 /* Default (Firefox/Chromium): children participate in parent grid */
 #sets-root{ display: contents; }
-
-/* Safari-only override */
-@supports (-webkit-touch-callout: none) {
-
-  /* Make #sets-root a grid container that mimics .grid.mosaic */
-  #sets-root{
-    display: grid !important;
-    grid-template-columns: repeat(6, 1fr);
-    grid-auto-flow: dense;
-    gap: 18px;
-
-    /* This is the key: give Safari deterministic row tracks so span-rows behave */
-    grid-auto-rows: 190px;
-
-    /* Treat it like a "section" inside the parent mosaic grid */
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-
-    /* span full width of the parent grid */
-    grid-column: 1 / -1;
-  }
-
-  /* Ensure generated cards actually fill their tracks */
-  #sets-root > .card{
-    height: 100%;
-    align-self: stretch;
-    min-height: 0;
-  }
-  #sets-root > .card.player{
-    overflow: hidden; /* keep slideshow from leaking */
-  }
-
-  /* Inside cards: allow flex children to shrink correctly (WebKit quirk) */
-  #sets-root > .card{
-    min-height: 0;
-  }
-  #sets-root > .card > *{
-    min-height: 0;
-  }
-}
-/* =========================
-   Safari hard override (reliable)
-   If @supports doesn't trigger consistently, add class via JS:
-   <script>
-     document.documentElement.classList.toggle(
-       'is-safari',
-       /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-     );
-   </script>
-   ========================= */
-
-html.is-safari #sets-root{
-  display: grid !important;
-  grid-template-columns: repeat(6, 1fr);
-  grid-auto-flow: dense;
-  gap: 18px;
-  grid-auto-rows: 190px; /* 2 rows ≈ 380px */
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  grid-column: 1 / -1;
-}
-
-html.is-safari #sets-root > .card{
-  height: 100%;
-  align-self: stretch;
-  min-height: 0;
-}
-
-html.is-safari #sets-root > .card.player{
-  overflow: hidden;
-}
-
-html.is-safari .grid.mosaic{
-  align-items: stretch;
-}
 
 /* ====== TAGS (encircled genre chips) ====== */
 .tags{

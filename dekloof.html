@@ -1,6 +1,13 @@
 <!doctype html>
-<html lang="nl">
+<html>
 <head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>yagel.nl - de kloof</title>
@@ -27,15 +34,15 @@
       <div class="rule"></div>
     </header>
 
-    <main class="grid mosaic" aria-label="DE KLOOF">
-      <div class="card tilt-1 span-3 row-1">
-        <div>
-          <div class="label" data-i18n="intro_label">DAKLOZENOPVANG DE KLOOF</div>
-          <!-- <div class="meta" data-i18n="intro_meta">Elke donderdagochtend kook ik bij De Kloof een maaltijd voor de lunch. Om 9 uur kom ik binnen, inventariseer wat er is en beslis het menu. Vervolgens heb ik vaak nog drie en een half uur om boodschappen te doen en alles te bereiden. Gelukkig komen vrienden en familie vaak helpen. Dit is de plek waar mijn passie voor koken is begonnen.</div> -->
+    <main class="masonry" aria-label="DE KLOOF">
+      <div id="col-a" class="masonry-col">
+        <div class="card intro tilt-1">
+            <div class="label" data-i18n="intro_label">DAKLOZENOPVANG DE KLOOF</div>
+            <div class="meta" data-i18n="intro_meta">Beshcrijving</div>
         </div>
       </div>
 
-      <div id="sets-root" style="display: contents;"></div>
+      <div id="col-b" class="masonry-col"></div>
     </main>
 
     <footer>
@@ -61,7 +68,6 @@
           "images/koken/daklozenopvang/saoto/saoto3.jpg",
           "images/koken/daklozenopvang/saoto/saoto4.jpg",
         ],
-        size:  "span-3 row-2",
         tilt:  "tilt-3"
       },  
       {
@@ -75,23 +81,8 @@
           "images/koken/daklozenopvang/isis saus/saus4.jpg",
           "images/koken/daklozenopvang/isis saus/saus6.jpg",
         ],
-        size:  "span-3 row-2",
         tilt:  "tilt-3"
       },  
-      {
-        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
-        desc:  { nl: "mijn data-baas kwam mee tortillas maken; van deeg tot salsa", en: "my employer of Nidap joined to make tortillas; from dough to salsa" },
-        photos: [
-          "images/koken/daklozenopvang/martijn tortillas/tortillas4.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas5.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas1.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas3.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas2.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas7.jpg",
-        ],
-        size:  "span-3 row-2",
-        tilt:  "tilt-3"
-      },
       {
         title: { nl: "Hamburgers met de papi's", en: "Hamburgers with the papis" },
         desc:  { nl: "met roel, bart en enrikos 90 hamburgers gemaakt (inclusief de broodjes en mayo)", en: "with roel, bart and enrikos, we made 90 hamburgers (including the breads and mayo)" },
@@ -104,7 +95,14 @@
           "images/koken/daklozenopvang/burgers papi/burger6.jpg",
           "images/koken/daklozenopvang/burgers papi/burger7.jpg",
         ],
-        size:  "span-3 row-2",
+        tilt:  "tilt-1"
+      },
+      {
+        title: { nl: "René", en: "René" },
+        desc:  { nl: "blij met gedoneerd zuurdesem brood van de bakker", en: "happy with the donated sourdough bread from the bakery" },
+        photos: [
+          "images/koken/daklozenopvang/rene brood.jpg",
+        ],
         tilt:  "tilt-1"
       },
       {
@@ -117,8 +115,20 @@
           "images/koken/daklozenopvang/degen/deeg4.jpg",
           "images/koken/daklozenopvang/degen/deeg5.jpg",
         ],
-        size:  "span-3 row-2",
         tilt:  "tilt-2"
+      },
+      {
+        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
+        desc:  { nl: "mijn data-baas kwam mee tortillas maken; van deeg tot salsa", en: "my employer of Nidap joined to make tortillas; from dough to salsa" },
+        photos: [
+          "images/koken/daklozenopvang/martijn tortillas/tortillas4.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas5.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas1.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas3.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas2.jpg",
+          "images/koken/daklozenopvang/martijn tortillas/tortillas7.jpg",
+        ],
+        tilt:  "tilt-3"
       }
     ];
 
@@ -137,9 +147,10 @@
     };
 
     function renderSets(lang){
-      var root = document.getElementById("sets-root");
-      if(!root) return;
-      root.innerHTML = "";
+      var colA = document.getElementById('col-a');
+      if(!colA) return;
+      var colB = document.getElementById('col-b');
+      if(!colB) return;
 
       SETS.forEach(function(s, idx){
         var card = document.createElement("div");
@@ -189,7 +200,7 @@
           '</div>';
 
 
-        root.appendChild(card);
+        ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
       });
 
       wireSliders();
@@ -438,16 +449,16 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          // intro_label: "DAKLOZENOPVANG DE KLOOF",
-          intro_label: "Elke donderdag kook ik 60 maaltijden bij De Kloof\n\n Tussen 9am en 1pm moet alles gebeuren vanaf nul\nGelukkig komen vrienden en familie vaak helpen\n\nDit is de plek waar mijn passie voor koken is begonnen.",
+          intro_label: "DAKLOZENOPVANG DE KLOOF",
+          intro_meta: "sinds 2023 kom ik elke donderdagochtend naar de kloof om 60 maaltijden te bereiden\n\n Tussen 9am en 1pm moet alles gebeuren vanaf: van het recept bedenken tot boodschappen tot service. Gelukkig komen vrienden en familie vaak helpen :-)\n\nDit is de plek waar mijn passie voor koken is begonnen.",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          // intro_label: "HOMELESS SHELTER DE KLOOF",
-          intro_label: "Every Thursday I cook 60 meals at De Kloof\n\nBetween 9am and 1pm, everything has to be done from scratch\nLuckily, friends and family often help out\n\nThis is the place where my passion for cooking started",
+          intro_label: "HOMELESS SHELTER DE KLOOF",
+          intro_meta: "since 2023, i come in every thursday morning at De Kloof to prepare 60 meals\n\nBetween 9am and 1pm, everything has to be done: from recipe design to groceries to service. Luckily, friends and family often help out :-)\n\nThis is the place where my passion for cooking started.",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
@@ -456,20 +467,27 @@
 
       function applyLang(lang){
         var pack = dict[lang] || dict.nl;
-        document.documentElement.lang = lang;
 
+        // DOM state (for CSS hooks)
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
         document.querySelectorAll("[data-i18n]").forEach(function(el){
           var key = el.getAttribute("data-i18n");
           if(pack[key]) el.textContent = pack[key];
         });
 
+        // Toggle button state
         document.querySelectorAll(".lang-btn").forEach(function(btn){
-          var isOn = btn.getAttribute("data-lang") === lang;
-          btn.setAttribute("aria-pressed", isOn ? "true" : "false");
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
         });
 
-        localStorage.setItem("lang", lang);
-        renderSets(lang);
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
       }
 
       var initial = localStorage.getItem("lang") || document.documentElement.lang || "nl";
@@ -498,82 +516,34 @@
       });
     })();
   </script>
-
-  <script>
-  (function safariDebug(){
-
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    console.log('%cDEBUG START', 'background:#000;color:#0f0;padding:4px');
-    console.log('Browser:', isSafari ? 'Safari' : 'Not Safari');
-
-    const tiles = document.querySelectorAll('.card, .tile');
-    console.log('Tiles found:', tiles.length);
-
-    tiles.forEach((tile, i) => {
-      const rect = tile.getBoundingClientRect();
-      const style = getComputedStyle(tile);
-
-      console.group(`TILE ${i}`);
-      console.log('height (rect):', rect.height);
-      console.log('scrollHeight:', tile.scrollHeight);
-      console.log('clientHeight:', tile.clientHeight);
-      console.log('display:', style.display);
-      console.log('position:', style.position);
-      console.log('overflow:', style.overflow);
-      console.log('aspect-ratio:', style.aspectRatio);
-      console.log('grid-row:', style.gridRow);
-      console.log('contains slider:', !!tile.querySelector('.slider-frame'));
-      console.groupEnd();
-    });
-
-  })();
-  </script>
-
-  <script>
-    setTimeout(() => {
-      document.querySelectorAll('.slider-frame').forEach((frame, i) => {
-        const frameRect = frame.getBoundingClientRect();
-        const frameCS = getComputedStyle(frame);
-
-        const track = frame.querySelector('.slider-track, .slides, .slider');
-        const img = frame.querySelector('img, video');
-
-        console.group(`SLIDERFRAME ${i}`);
-        console.log('frame rect h:', frameRect.height);
-        console.log('frame clientHeight:', frame.clientHeight, 'scrollHeight:', frame.scrollHeight);
-        console.log('frame display:', frameCS.display, 'pos:', frameCS.position, 'overflow:', frameCS.overflow);
-        console.log('frame height style:', frameCS.height, 'min-height:', frameCS.minHeight);
-
-        if(track){
-          const tRect = track.getBoundingClientRect();
-          const tCS = getComputedStyle(track);
-          console.log('track rect h:', tRect.height);
-          console.log('track clientHeight:', track.clientHeight, 'scrollHeight:', track.scrollHeight);
-          console.log('track display:', tCS.display, 'pos:', tCS.position, 'height:', tCS.height);
-        } else {
-          console.log('track: NOT FOUND');
-        }
-
-        if(img){
-          const iRect = img.getBoundingClientRect();
-          const iCS = getComputedStyle(img);
-          console.log('media tag:', img.tagName);
-          console.log('media rect h:', iRect.height);
-          console.log('media pos:', iCS.position, 'height:', iCS.height, 'object-fit:', iCS.objectFit);
-        } else {
-          console.log('media: NOT FOUND');
-        }
-
-        console.groupEnd();
-      });
-    }, 800);
-    </script>
-
-    <script>
+  
+    <!-- <script>
       document.documentElement.classList.toggle(
         'is-safari',
         /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
       );
-    </script>
+    </script> -->
+
+    <!-- <script>
+      window.addEventListener('load', () => {
+        const root = document.getElementById('sets-root')
+
+        for (const tile of root.children) {
+          const tileRect = tile.getBoundingClientRect()
+
+          const slider = tile.querySelector('.slider-frame')
+          const sliderHeight = slider
+            ? slider.getBoundingClientRect().height
+            : 'no slider'
+
+          console.log({
+            tile: tile.className,
+            tileHeight: tileRect.height,
+            sliderHeight
+          })
+        }
+      })
+    </script> -->
+
 </body>
 </html>

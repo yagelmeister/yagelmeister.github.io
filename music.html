@@ -1,6 +1,15 @@
 <!doctype html>
-<html lang="nl">
+<html>
 <head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+
+      console.log(lang)
+    })();
+  </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>yagel.nl – music</title>
@@ -119,13 +128,18 @@
 
       function applyLang(lang){
         var pack = dict[lang] || dict.nl;
-        document.documentElement.lang = lang;
 
+        // DOM state (for CSS hooks)
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
         document.querySelectorAll("[data-i18n]").forEach(function(el){
           var key = el.getAttribute("data-i18n");
           if(pack[key]) el.textContent = pack[key];
         });
 
+        // Toggle button state
         document.querySelectorAll(".lang-btn").forEach(function(btn){
           btn.setAttribute(
             "aria-pressed",
@@ -133,8 +147,10 @@
           );
         });
 
-        localStorage.setItem("lang", lang);
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
       }
+
 
       var initial = localStorage.getItem("lang") || "nl";
       applyLang(initial);
