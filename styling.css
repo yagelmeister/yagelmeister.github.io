@@ -302,6 +302,16 @@ html[data-theme="night"] .pill:hover{
   flex-direction: column;
   gap: 18px;
 }
+@media (max-width: 760px){
+  .masonry{
+    flex-direction: column;
+  }
+
+  .masonry-col{
+    width: 100%;
+  }
+
+}
 
 /* description text used in radio/mps style pages */
 .desc{
