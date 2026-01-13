@@ -6,9 +6,6 @@
       var lang = localStorage.getItem("yagel_lang") || "en";
       document.documentElement.setAttribute("data-lang", lang);
       document.documentElement.lang = lang;
-
-      console.log(lang)
-      console.log(document.documentElement.lang)
     })();
   </script>
   <link rel="stylesheet" href="styling.css" />
@@ -48,7 +45,7 @@
 
       <a class="card tilt-2 matrix-card" href="data.html">
         <div>
-          <video id="matrixVideo" class="card-image" muted autoplay playsinline preload="metadata" loop speed="0.1">
+          <video id="matrixVideo" class="card-image" autoplay muted playsinline preload="metadata" loop speed="0.4">
           <source src="images/data/matrix.mp4" type="video/mp4">
         </video>
           <div class="label" data-i18n="tile_data">DATA</div>
