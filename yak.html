@@ -254,6 +254,10 @@
       var colB = document.getElementById('col-b');
       if(!colB) return;
 
+      if(window.matchMedia("(max-width: 760px)").matches){
+        colB.innerHTML = "";
+      }
+
       var isAll = activeTags.has("all");
       var wanted = Array.from(activeTags); // selected tags
 
@@ -289,8 +293,14 @@
                 '<iframe loading="lazy" allow="autoplay" src="' + scEmbedSrc(m.url) + '"></iframe>' +
               '</div>' +
             '</div>';
+          
+        var isMobile = window.matchMedia("(max-width: 760px)").matches;
 
+        if(isMobile){
+          colA.appendChild(card);     // alles onder elkaar in col-a
+        }else{
           ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
+        }
         });
     }
 

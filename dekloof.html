@@ -152,6 +152,10 @@
       var colB = document.getElementById('col-b');
       if(!colB) return;
 
+      if(window.matchMedia("(max-width: 760px)").matches){
+        colB.innerHTML = "";
+      }
+
       SETS.forEach(function(s, idx){
         var card = document.createElement("div");
         card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
@@ -200,8 +204,13 @@
 
           '</div>';
 
+        var isMobile = window.matchMedia("(max-width: 760px)").matches;
 
-        ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
+        if(isMobile){
+          colA.appendChild(card);     // alles onder elkaar in col-a
+        }else{
+          ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
+        }
       });
 
       wireSliders();
