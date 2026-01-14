@@ -254,9 +254,8 @@
       var colB = document.getElementById('col-b');
       if(!colB) return;
 
-      if(window.matchMedia("(max-width: 760px)").matches){
-        colB.innerHTML = "";
-      }
+      // clear old mixes
+      document.querySelectorAll('[data-mix-card="1"]').forEach(el => el.remove());
 
       var isAll = activeTags.has("all");
       var wanted = Array.from(activeTags); // selected tags
@@ -274,6 +273,7 @@
         })
         .forEach(function(m){
           var card = document.createElement("div");
+          card.setAttribute("data-mix-card", "1");
           card.className = "card player " + (m.tilt || "") + " " + (m.size || "");
 
           var title = (m.title && (m.title[lang] || m.title.nl)) || "Mix";

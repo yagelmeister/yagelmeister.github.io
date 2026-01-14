@@ -10,8 +10,8 @@
   </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>yagel.nl - de kloof</title>
-  <meta name="description" content="meals for homeless people" />
+  <title>yagel.nl - catering</title>
+  <meta name="description" content="private catering" />
 
   <link rel="stylesheet" href="styling.css" />
 
@@ -37,7 +37,7 @@
     <main class="masonry" aria-label="DE KLOOF">
       <div id="col-a" class="masonry-col">
         <div class="card intro tilt-1">
-            <div class="label" data-i18n="intro_label">DAKLOZENOPVANG DE KLOOF</div>
+            <div class="label" data-i18n="intro_label">Private / catering</div>
             <div class="meta" data-i18n="intro_meta">Beshcrijving</div>
         </div>
       </div>
@@ -60,73 +60,15 @@
 
     var SETS = [
       {
-        title: { nl: "VEGAN SAOTO SOEP", en: "VEGAN SAOTO SOUP" },
-        desc:  { nl: "met gekruide kool als vervanger van kip", en: "with spiced cabbage as replacement of chicken" },
+        title: { nl: "DE NEDERLANDSE AMBASSADE IN TOKYO", en: "THE DUTCH EMBASSY IN TOKYO" },
+        desc:  { nl: "kas en ik werden uitgenodigd om worstenbroodjes te maken voor de tulp reveal", en: "kas and i were invited to make sausage rolls for the tulip reveal" },
         photos: [
-          "images/koken/daklozenopvang/saoto/saoto1.jpg",
-          "images/koken/daklozenopvang/saoto/saoto2.jpg",
-          "images/koken/daklozenopvang/saoto/saoto3.jpg",
-          "images/koken/daklozenopvang/saoto/saoto4.jpg",
-        ],
-        tilt:  "tilt-3"
-      },  
-      {
-        title: { nl: "PASTASAUS MET ISIS", en: "PASTA SAUCE WITH ISIS" },
-        desc:  { nl: "van gegrilde tomaten en paprikas in de oven", en: "from grilled tomatoes and bell peppers in the oven" },
-        photos: [
-          "images/koken/daklozenopvang/isis saus/saus0.jpeg",
-          "images/koken/daklozenopvang/isis saus/saus1.jpeg",
-          "images/koken/daklozenopvang/isis saus/saus2.jpeg",
-          "images/koken/daklozenopvang/isis saus/saus3.5.jpeg",
-          "images/koken/daklozenopvang/isis saus/saus4.jpeg",
-          "images/koken/daklozenopvang/isis saus/saus6.jpeg",
-        ],
-        tilt:  "tilt-3"
-      },  
-      {
-        title: { nl: "Hamburgers met de papi's", en: "Hamburgers with the papis" },
-        desc:  { nl: "een speciale zomergrill georganiseerd met roel, bart en enrikos; 100 hamburgers inclusief zelfgemaakte friet, broodjes en mayo", en: "a special summer grill organised with roel, bart and enrikos: 100 burgers including homemade fries, buns and mayo" },
-        photos: [
-          "images/koken/daklozenopvang/burgers papi/burger1.jpeg",
-          "images/koken/daklozenopvang/burgers papi/burger2.jpg",
-          "images/koken/daklozenopvang/burgers papi/burger4.jpeg",
-          "images/koken/daklozenopvang/burgers papi/burger5.jpeg",
-          "images/koken/daklozenopvang/burgers papi/burger3.jpg",
-          "images/koken/daklozenopvang/burgers papi/burger6.jpg",
-          "images/koken/daklozenopvang/burgers papi/burger7.jpg",
-        ],
-        tilt:  "tilt-1"
-      },
-      {
-        title: { nl: "René", en: "René" },
-        desc:  { nl: "blij met gedoneerd zuurdesem brood van de bakker", en: "happy with donated sourdough bread from the bakery" },
-        photos: [
-          "images/koken/daklozenopvang/rene brood.jpg",
-        ],
-        tilt:  "tilt-1"
-      },
-      {
-        title: { nl: "Degen met marie en jeremy", en: "Dough with marie and jeremy" },
-        desc:  { nl: "het leukst / uitdagendst is om in de korte tijd ook het deeg te maken, zoals de tortillas met marie en biang biang noodles met jeremy", en: "the most fun / challenging is to also make fresh dough in the short window, like tortillas with marie or biang biang noodles with jeremy" },
-        photos: [
-          "images/koken/daklozenopvang/degen/deeg1.jpeg",
-          "images/koken/daklozenopvang/degen/deeg2.jpg",
-          "images/koken/daklozenopvang/degen/deeg3.jpeg",
-          "images/koken/daklozenopvang/degen/deeg4.jpeg",
-          "images/koken/daklozenopvang/degen/deeg5.jpeg",
-        ],
-        tilt:  "tilt-2"
-      },
-      {
-        title: { nl: "TORTILLAS MET MARTIJN", en: "TORTILLAS WITH MARTIJN" },
-        desc:  { nl: "mijn data-baas kwam mee tortillas maken; van deeg tot salsa", en: "my employer of Nidap joined to make tortillas; from dough to salsa" },
-        photos: [
-          "images/koken/daklozenopvang/martijn tortillas/tortillas4.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas5.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas1.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas3.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas2.jpg",
-          "images/koken/daklozenopvang/martijn tortillas/tortillas7.jpg",
+          "images/koken/catering/worstenbroodjes.JPG",
+          "images/koken/catering/japan ambassade/worstbr1.jpg",
+          "images/koken/catering/japan ambassade/worstbr4.JPG",
+          "images/koken/catering/japan ambassade/worstbr2.jpg",
+          "images/koken/catering/japan ambassade/worstbr3.jpg",
+          "images/koken/catering/japan ambassade/worstbr5.jpg",
         ],
         tilt:  "tilt-3"
       }
@@ -459,16 +401,16 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
-          intro_label: "DAKLOZENOPVANG DE KLOOF",
-          intro_meta: "sinds 2023 kom ik elke donderdagochtend naar de kloof om 60 maaltijden te bereiden\n\n Tussen 9am en 1pm moet alles gebeuren vanaf: van het recept bedenken tot boodschappen tot service. Gelukkig komen vrienden en familie vaak helpen :-)\n\nDit is de plek waar mijn passie voor koken is begonnen.",
+          intro_label: "PRIVÉ / CATERING",
+          intro_meta: "gerechten thuis gemaakt of voor evenementen",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
         },
         en: {
           name: "YA'GEL SCHOONDERBEEK",
-          intro_label: "HOMELESS SHELTER DE KLOOF",
-          intro_meta: "since 2023, i come in every thursday morning at De Kloof to prepare 60 meals\n\nBetween 9am and 1pm, everything has to be done: from recipe design to groceries to service. Luckily, friends and family often help out :-)\n\nThis is the place where my passion for cooking started.",
+          intro_label: "PRIVATE / CATERING",
+          intro_meta: "plates created at home or for evenst",
           pill_home: "HOME",
           pill_cheffie: "CHEF YAKKI",
           pill_contact: "CONTACT"
@@ -532,5 +474,5 @@
       });
     })();
   </script>
-</body>
+  </body>
 </html>

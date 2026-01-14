@@ -311,6 +311,8 @@ html[data-theme="night"] .pill:hover{
     width: 100%;
   }
 
+  #col-b{ order: 0; }  /* filters first */
+  #col-a{ order: 1; }  /* intro + mixes after */
 }
 
 /* description text used in radio/mps style pages */
