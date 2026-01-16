@@ -1,0 +1,486 @@
+<!doctype html>
+<html>
+<head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yagel.nl - kookstages</title>
+  <meta name="description" content="kookstages" />
+
+  <link rel="stylesheet" href="styling.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar" aria-label="Taal kiezen">
+        <button class="lang-btn" type="button" data-lang="nl" aria-pressed="true">nl</button>
+        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">en</button>
+      </div>
+
+      <div class="name">
+        <a href="home.html" data-i18n="name">YA'GEL SCHOONDERBEEK</a>
+      </div>
+      <div class="rule"></div>
+    </header>
+
+    <main class="masonry" aria-label="DE KLOOF">
+      <div id="col-a" class="masonry-col">
+        <div class="card intro tilt-1">
+            <div class="label" data-i18n="intro_label">Kookstages</div>
+            <div class="meta" data-i18n="intro_meta">op allerlei plekken heb ik van alles geleerd\n\nop dit moment vooral de wegen van zuurdesem bij bakkerij mater</div>
+        </div>
+      </div>
+
+      <div id="col-b" class="masonry-col"></div>
+    </main>
+
+    <footer>
+      <a class="pill" href="cheffie.html" data-i18n="pill_cheffie">CHEF YAKKI</a>
+      <a class="pill" href="home.html" data-i18n="pill_home">HOME</a>
+      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme || "auto");
+    })();
+
+    var SETS = [
+      {
+        title: { nl: "BAKKERIJ MATER", en: "BAKERY MATER" },
+        desc:  { nl: "elke vrijdag houdt ik me bezig met het mengen, kneden, vouwen en vormen van zuurdesem deeg", en: "every friday, i'm occupied with mixing, kneading, folding and shaping sourdough" },
+        photos: [
+          "images/koken/keuken/pitas.webp",
+          "images/koken/keuken/mater/boederij.jpg",
+        ],
+        tilt:  "tilt-3"
+      },
+      {
+        title: { nl: "MARUKIN RAMEN", en: "MARUKIN RAMEN" },
+        desc:  { nl: "voor een paar maanden, heb ik in tokyo gyoza's en ramen deeg leren maken. af en toe ging kas mee", en: "for a feww months, i learned how to make gyoza's and ramen dough in tokyo. sometimes, kas joined me" },
+        photos: [
+          "images/koken/keuken/japan ramen/ramen1.webp",
+          "images/koken/keuken/japan ramen/ramen2.webp",
+          "images/koken/keuken/japan ramen/ramen3.jpg",
+          "images/koken/keuken/japan ramen/ramen4.jpg",
+          "images/koken/keuken/japan ramen/ramen5.jpg",
+        ],
+        tilt:  "tilt-3"
+      }
+    ];
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    var SLIDER_LABELS = {
+      nl: { prev: "vorige", next: "volgende" },
+      en: { prev: "prev", next: "next" }
+    };
+
+    function renderSets(lang){
+      var colA = document.getElementById('col-a');
+      if(!colA) return;
+      var colB = document.getElementById('col-b');
+      if(!colB) return;
+
+      if(window.matchMedia("(max-width: 760px)").matches){
+        colB.innerHTML = "";
+      }
+
+      SETS.forEach(function(s, idx){
+        var card = document.createElement("div");
+        card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
+        card.setAttribute("data-set-card", "1");
+
+        var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
+        var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var sliderId = "slider-" + idx;
+
+        var labels = SLIDER_LABELS[lang] || SLIDER_LABELS.en;
+
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var first = photos[0];
+        var last  = photos[photos.length - 1];
+
+        var loopPhotos;
+        if(photos.length > 1){
+          loopPhotos = [last].concat(photos).concat([first]); // clone-last + echte fotos + clone-first
+        }else{
+          loopPhotos = photos.slice();
+        }
+
+        card.innerHTML =
+          '<div>' +
+            '<div class="label">' + escapeHtml(title) + '</div>' +
+            '<div class="meta">photos</div>' +
+            (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
+
+            '<div class="slider" data-slider-id="' + sliderId + '">' +
+              '<div class="slider-frame" aria-label="photo slider">' +
+
+                '<div class="slider-track">' +
+                  loopPhotos.map(function(p){
+                    return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
+                  }).join("") +
+                '</div>' +
+
+                '<div class="slider-overlay" aria-hidden="true">' +
+                  '<div class="slider-hover left"></div>' +
+                  '<div class="slider-hover right"></div>' +
+                '</div>' +
+
+              '</div>' +
+            '</div>' +
+
+          '</div>';
+
+        var isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+        if(isMobile){
+          colA.appendChild(card);     // alles onder elkaar in col-a
+        }else{
+          ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
+        }
+      });
+
+      wireSliders();
+      autoAspectRatio();
+    }
+
+    function autoAspectRatio(){
+      document.querySelectorAll(".slider-frame").forEach(function(frame){
+        var imgs = Array.from(frame.querySelectorAll("img"));
+        if(!imgs.length) return;
+
+        var waits = imgs.map(function(img){
+          return new Promise(function(resolve){
+            if(img.complete && img.naturalWidth) return resolve();
+            img.addEventListener("load", resolve, { once:true });
+            img.addEventListener("error", resolve, { once:true });
+          });
+        });
+
+        Promise.all(waits).then(function(){
+          var maxRatio = 0;
+          imgs.forEach(function(img){
+            var w = img.naturalWidth || 0;
+            var h = img.naturalHeight || 1;
+            var r = w / h;
+            if(r > maxRatio) maxRatio = r;
+          });
+
+          if(!maxRatio || !isFinite(maxRatio)) maxRatio = 16/9;
+          frame.style.aspectRatio = String(maxRatio);
+        });
+      });
+    }
+
+    function wireSliders(){
+      var SPEED_AUTO = 60;       // px per soconde
+      var SPEED_USER = 180;       // px per soconde
+      var AUTO_DELAY = 700;      // ms wachten na in-beeld komen / mouseleave
+      var VIEW_THRESHOLD = 1.0;  // hoeveel van de slider in beeld moet zijn
+
+      var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var frame = entry.target;
+          var api = frame.__sliderApi;
+          if(!api) return;
+
+          api.inView = entry.isIntersecting && entry.intersectionRatio >= VIEW_THRESHOLD;
+
+          if(!api.inView){
+            api.stopAll();
+          }else{
+            api.maybeScheduleAuto();
+          }
+        });
+      }, { threshold: [1] }) : null;
+
+      document.querySelectorAll(".slider").forEach(function(slider){
+        var frame = slider.querySelector(".slider-frame");
+        var track = slider.querySelector(".slider-track");
+        if(!frame || !track) return;
+
+        var slides = Array.from(track.querySelectorAll("img"));
+        if(slides.length < 2) return;
+
+        var leftZone  = slider.querySelector(".slider-hover.left");
+        var rightZone = slider.querySelector(".slider-hover.right");
+        if(!leftZone || !rightZone) return;
+
+        var dir = 0;
+        var raf = null;
+        var lastT = 0;
+
+        var offset = 0;     // px
+        var slideW = 0;     // px
+        var realCount = 0;  // echte fotos (zonder clones)
+
+        var hovering = false;
+        var inView = false;
+
+        var autoTimer = null;
+        var autoDir = 1; // standaard auto naar rechts
+
+        var api = { isAuto: false };
+
+        function apply(){
+          track.style.transform = "translateX(" + (-offset) + "px)";
+        }
+
+        function recalc(){
+          slideW = frame.clientWidth;
+          realCount = slides.length >= 3 ? (slides.length - 2) : slides.length;
+
+          // startpositie: echte eerste (index 1) als we clones hebben
+          if(slides.length >= 3 && offset === 0){
+            offset = slideW;
+          }
+          apply();
+        }
+
+        function stopRAF(){
+          if(raf){
+            cancelAnimationFrame(raf);
+            raf = null;
+          }
+          lastT = 0;
+        }
+
+        function tick(t){
+          if(!lastT) lastT = t;
+          var dt = (t - lastT) / 1000;
+          lastT = t;
+
+          if(dir !== 0){
+            var speed = api.isAuto ? SPEED_AUTO : SPEED_USER;
+            offset += dir * speed * dt;
+
+            if(slides.length >= 3){
+              var min = 0;
+              var max = (realCount + 1) * slideW;
+
+              if(offset >= max){
+                offset = slideW;              // terug naar echte eerste
+              }else if(offset <= min){
+                offset = realCount * slideW;  // naar echte laatste
+              }
+            }else{
+              var max2 = (slides.length - 1) * slideW;
+              if(offset >= max2) offset = 0;
+              if(offset < 0) offset = max2;
+            }
+
+            apply();
+          }
+
+          raf = requestAnimationFrame(tick);
+        }
+
+        function startRAF(newDir, isAuto){
+          api.isAuto = !!isAuto;   // true = auto, false = user
+          dir = newDir;
+          if(raf) return;
+          lastT = 0;
+          raf = requestAnimationFrame(tick);
+        }
+
+
+        function stopMove(){
+          dir = 0;
+          stopRAF();
+        }
+
+        function clearAutoTimer(){
+          if(autoTimer){
+            clearTimeout(autoTimer);
+            autoTimer = null;
+          }
+        }
+
+        function stopAll(){
+          clearAutoTimer();
+          stopMove();
+        }
+
+        function maybeScheduleAuto(){
+          clearAutoTimer();
+          if(!inView) return;
+          if(hovering) return;
+
+          autoTimer = setTimeout(function(){
+            // check opnieuw op moment van starten
+            if(!inView) return;
+            if(hovering) return;
+            startRAF(autoDir, true);
+          }, AUTO_DELAY);
+        }
+
+        function setHover(state){
+          hovering = state;
+          if(hovering){
+            // user neemt over
+            stopAll();
+          }else{
+            // user weg -> na delay auto door
+            maybeScheduleAuto();
+          }
+        }
+
+        // init
+        recalc();
+
+        // resize: behoud ongeveer dezelfde "index"
+        window.addEventListener("resize", function(){
+          var oldW = slideW || frame.clientWidth;
+          var idx = oldW ? (offset / oldW) : 0;
+          recalc();
+          offset = idx * slideW;
+          apply();
+        });
+
+        // Hover gedrag (pauzeert auto zodra je erop zit)
+        frame.addEventListener("mouseenter", function(){ setHover(true); });
+        frame.addEventListener("mouseleave", function(){
+          setHover(false);
+          stopMove(); // stop ook manual push als je uit de slider gaat
+        });
+
+        // User control via zones
+        leftZone.addEventListener("mouseenter", function(){
+          setHover(true);
+          startRAF(-1, false);
+        });
+        rightZone.addEventListener("mouseenter", function(){
+          setHover(true);
+          startRAF(1, false);
+        });
+
+        leftZone.addEventListener("mouseleave", function(){
+          stopMove();
+          setHover(false);
+        });
+        rightZone.addEventListener("mouseleave", function(){
+          stopMove();
+          setHover(false);
+        });
+
+        // “API” voor IntersectionObserver
+        frame.__sliderApi = {
+          get inView(){ return inView; },
+          set inView(v){ inView = !!v; },
+          stopAll: stopAll,
+          maybeScheduleAuto: maybeScheduleAuto
+        };
+
+        // observe in-view
+        if(io){
+          io.observe(frame);
+        }else{
+          // fallback zonder IO: meteen schedulen
+          inView = true;
+          maybeScheduleAuto();
+        }
+      });
+    }
+
+    (function(){
+      var dict = {
+        nl: {
+          name: "YA'GEL SCHOONDERBEEK",
+          intro_label: "KEUKEN ERVARINGEN",
+          intro_meta: "op allerlei plekken heb ik van alles geleerd als chef\n\nop dit moment vooral de wegen van zuurdesem bij bakkerij mater",
+          pill_home: "HOME",
+          pill_cheffie: "CHEF YAKKI",
+          pill_contact: "CONTACT"
+        },
+        en: {
+          name: "YA'GEL SCHOONDERBEEK",
+          intro_label: "KITCHEN EXPERIENCES",
+          intro_meta: "at different places I have learned different things as a chef\n\nat the moment i'm learning the ways of sourdough at bakery mater every friday",
+          pill_home: "HOME",
+          pill_cheffie: "CHEF YAKKI",
+          pill_contact: "CONTACT"
+        }
+      };
+
+      function applyLang(lang){
+        var pack = dict[lang] || dict.nl;
+
+        // DOM state (for CSS hooks)
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        // Text replacements
+        document.querySelectorAll("[data-i18n]").forEach(function(el){
+          var key = el.getAttribute("data-i18n");
+          if(pack[key]) el.textContent = pack[key];
+        });
+
+        // Toggle button state
+        document.querySelectorAll(".lang-btn").forEach(function(btn){
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
+        });
+
+        // Persistence across pages
+        localStorage.setItem("yagel_lang", lang);
+
+        // remove previously rendered set cards
+        document.querySelectorAll('[data-set-card="1"]').forEach(el => el.remove());
+
+        // then render in the chosen lang
+        renderSets(lang);
+      }
+
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
+      if(!dict[initial]) initial = "nl";
+
+      applyLang(initial);
+
+      document.querySelectorAll(".lang-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          applyLang(btn.getAttribute("data-lang"));
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const user = "yagelschoonderbeek";
+      const domain = "gmail.com";
+      const link = document.getElementById("contactLink");
+      if (!link) return;
+
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.href = "mailto:" + user + "@" + domain;
+      });
+    })();
+  </script>
+  </body>
+</html>
