@@ -64,7 +64,7 @@
 
     <footer>
       <a class="pill" href="cv.html" data-i18n="pill_cv">CV</a>
-      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+      <a class="pill" href="contact.html" data-i18n="pill_contact">CONTACT</a>
     </footer>
   </div>
 
@@ -136,21 +136,6 @@
         btn.addEventListener("click", function(){
           applyLang(btn.getAttribute("data-lang"));
         });
-      });
-    })();
-  </script>
-
-  <script>
-    (function () {
-      const user = "yagelschoonderbeek";
-      const domain = "gmail.com";
-      const link = document.getElementById("contactLink");
-
-      if (!link) return;
-
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        window.location.href = "mailto:" + user + "@" + domain;
       });
     })();
   </script>

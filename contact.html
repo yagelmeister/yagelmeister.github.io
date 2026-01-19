@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <script>
+    (function(){
+      var lang = localStorage.getItem("yagel_lang") || "en";
+      document.documentElement.setAttribute("data-lang", lang);
+      document.documentElement.lang = lang;
+    })();
+  </script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yagel.nl – contact</title>
+  <meta name="description" content="Contact – YA'GEL SCHOONDERBEEK" />
+
+  <link rel="stylesheet" href="styling.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar" aria-label="Taal kiezen">
+        <button class="lang-btn" type="button" data-lang="nl" aria-pressed="true">nl</button>
+        <button class="lang-btn" type="button" data-lang="en" aria-pressed="false">en</button>
+      </div>
+
+      <div class="name">
+        <a href="home.html">YA'GEL SCHOONDERBEEK</a>
+      </div>
+      <div class="rule"></div>
+    </header>
+
+    <main class="masonry" aria-label="DE KLOOF">
+      <div id="col-a" class="masonry-col">
+        <div class="card mail tilt-1">
+            <div class="label" data-i18n="mail_label">MAIL</a></div>
+            <div class="meta" data-i18n="mail_meta">yagelschoonderbeek@gmail.com</div>
+        </div>
+        <div class="card intro tilt-2">
+            <div class="label" data-i18n="intro_label">SOUNDCLOUD</a></div>
+            <div class="meta" data-i18n="intro_meta"><a href="http://soundcloud.com/yak_3000">http://soundcloud.com/yak_3000</a></div>
+        </div>
+        <div class="card intro tilt-1">
+            <div class="label" data-i18n="intro_label">INSTAGRAM</a></div>
+            <div class="meta" data-i18n="intro_meta"><a href="http://instagram.com/__yak3000/">http://instagram.com/__yak3000/</a></div>
+        </div>
+      </div>
+
+      <div id="col-b" class="masonry-col"></div>
+    </main>
+
+    <footer>
+      <a class="pill" href="home.html">HOME</a>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var savedTheme = localStorage.getItem("theme");
+      document.documentElement.setAttribute("data-theme", savedTheme || "auto");
+    })();
+  </script>
+
+  <script>
+    (function(){
+      var dict = {
+        nl: {},
+        en: {}
+      };
+
+      function applyLang(lang){
+        document.documentElement.lang = lang;
+        document.documentElement.setAttribute("data-lang", lang);
+
+        document.querySelectorAll(".lang-btn").forEach(function(btn){
+          btn.setAttribute(
+            "aria-pressed",
+            btn.getAttribute("data-lang") === lang ? "true" : "false"
+          );
+        });
+
+        localStorage.setItem("yagel_lang", lang);
+      }
+
+      var initial = localStorage.getItem("yagel_lang") || "nl";
+      applyLang(initial);
+
+      document.querySelectorAll(".lang-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          applyLang(btn.getAttribute("data-lang"));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -467,9 +467,9 @@ html[data-theme="night"] .pill:hover{
 }
 
 /* alleen voor de linksonder-schets vibe: 3 tegels net niet identiek */
-.tilt-1{ --tilt: -0.8deg; }
-.tilt-2{ --tilt:  0.7deg; }
-.tilt-3{ --tilt: -0.4deg; }
+.tilt-1{ --tilt: -0.4deg; }
+.tilt-2{ --tilt:  0.35deg; }
+.tilt-3{ --tilt: -0.2deg; }
 
 /* toegankelijkheid: minder beweging */
 @media (prefers-reduced-motion: reduce){

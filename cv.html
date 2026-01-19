@@ -22,13 +22,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* CV layout: mosaic grid like yak/mps, but tuned for text */
-    main.grid.cv{
-      grid-template-columns: repeat(6, 1fr);
-      grid-auto-flow: dense;
-      gap: 18px;
-      align-items: start;
-    }
 
     /* cards with lots of text */
     .card.cvblock{
@@ -173,14 +166,6 @@
       border-bottom-color: var(--line);
       opacity: 0.85;
     }
-
-    /* responsive: collapse to 1 column like the other pages */
-    @media (max-width: 760px){
-      main.grid.cv{ grid-template-columns: 1fr; }
-      .span-2, .span-3, .span-4, .row-1, .row-2{ grid-column: auto; grid-row: auto; }
-      .cv-item-head{ justify-content: flex-start; }
-      .cv-dates{ white-space: normal; }
-    }
   </style>
 </head>
 
@@ -198,164 +183,173 @@
       <div class="rule"></div>
     </header>
 
-    <main class="grid cv" aria-label="CV">
-      <!-- PROFILE -->
-      <div class="card cvblock tilt-1 span-4 row-1">
-        <div>
-          <div class="cv-title" data-i18n="profile_title">PROFIEL</div>
-          <div class="cv-sub" data-i18n="profile_sub">korte intro</div>
-          <p class="cv-text" data-i18n="profile_text">
-            Sociaal actieve vrijwilligerschef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.
-          </p>
-        </div>
-      </div>
-
-      <div class="card cvblock tilt-1 span-4 row-1">
-        <div>
-          <div class="cv-item" style="margin-top:14px;">
-            <div class="cv-title" data-i18n="experience_title">ERVARING</div>
-            <div class="cv-sub" data-i18n="experience_sub">rollen en projecten</div>
-
-            <div class="cv-item">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp1_role">Vrijwilligerschef</p>
-                <p class="cv-dates" data-i18n="exp1_dates">2023 – 2025</p>
-              </div>
-              <p class="cv-org" data-i18n="exp1_org">Daklozenopvang De Kloof en Testtafel.</p>
-              <p class="cv-text" data-i18n="exp1_text">
-                Wekelijks zelfstandig maaltijden bereiden voor daklozen bij de Kloof en ondersteunend werk bij het fine-dining menu van Testtafel. Ook af en toe op festivals.
-              </p>
-            </div>
-
-            <div class="cv-item">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp2_role">DJ en evenementen organisator</p>
-                <p class="cv-dates" data-i18n="exp2_dates">2022 – 2025</p>
-              </div>
-              <p class="cv-org" data-i18n="exp2_org">zzp</p>
-              <p class="cv-text" data-i18n="exp2_text">
-                Optredens bij verschillende radios, clubs en festivals, o.a. Radio Radio, Radio TNP, Kanaal40 en Landjuweel Festival. Mede-oprichter van mpsoundsystem, een collectief dat allerlei gratis (muziek)evenementen organiseert.
-              </p>
-            </div>
-
-            <div class="cv-item" id="exp3_optional_en" style="display:none;">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp3_role">Live sound engineer & studio host</p>
-                <p class="cv-dates" data-i18n="exp3_dates">2021 – 2025</p>
-              </div>
-              <p class="cv-org" data-i18n="exp3_org">Freelance/volunteer</p>
-              <p class="cv-text" data-i18n="exp3_text">
-                Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.
-              </p>
-            </div>
-
-            <div class="cv-item">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp4_role">Data Scientist</p>
-                <p class="cv-dates" data-i18n="exp4_dates">2021 – 2025</p>
-              </div>
-              <p class="cv-org" data-i18n="exp4_org">AFC Ajax en NIDAP, Amsterdam.</p>
-              <p class="cv-text" data-i18n="exp4_text">
-                Verantwoordelijk voor o.a. data analyses van de beweging van spelers en de banen- en educatie markt.
-              </p>
-            </div>
-
-            <div class="cv-item">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp5_role">Filmtheater Kriterion</p>
-                <p class="cv-dates" data-i18n="exp5_dates">2017 – 2022</p>
-              </div>
-              <p class="cv-org" data-i18n="exp5_org">Amsterdam.</p>
-              <p class="cv-text" data-i18n="exp5_text">
-                Standaard bar- en keukenwerk. Daarnaast verschillende posities over tijd, zoals bestuurslid en coördinator van het sollicitatieproces, de PR en live-muziek.
-              </p>
-            </div>
-
-            <div class="cv-item">
-              <div class="cv-item-head">
-                <p class="cv-role" data-i18n="exp6_role">Werkstudent</p>
-                <p class="cv-dates" data-i18n="exp6_dates">2018 – 2019</p>
-              </div>
-              <p class="cv-org" data-i18n="exp6_org">Deloitte, Amsterdam.</p>
-              <p class="cv-text" data-i18n="exp6_text">
-                Aandeel in projecten van cyber risk quantification.
-              </p>
-            </div>
+    <main class="masonry cv" aria-label="CV">
+      <div id="col-a" class="masonry-col">
+        <!-- linkerkolom -->
+        <div class="card cvblock tilt-1">
+          <div>
+            <div class="cv-title" data-i18n="profile_title">PROFIEL</div>
+            <div class="cv-sub" data-i18n="profile_sub">korte intro</div>
+            <p class="cv-text" data-i18n="profile_text">
+              Sociaal actieve vrijwilligerschef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.
+            </p>
           </div>
         </div>
-      </div>
 
-      <div class="card cvblock tilt-2 span-2 row-2">
-        <div>
-          <div class="cv-item" style="margin-top:14px;">
-            <div class="cv-title" data-i18n="skills_title">SKILLS</div>
-            <div class="cv-sub" data-i18n="skills_sub">korte lijst</div>
-            <div class="pill-row">
-              <span class="tag" data-i18n="skill1">planning & organisatie</span>
-              <span class="tag" data-i18n="skill2">snelle leerling</span>
-              <span class="tag" data-i18n="skill3">verantwoordelijkheidsgevoel</span>
-              <span class="tag" data-i18n="skill4">technisch onderlegd</span>
+        <div class="card cvblock tilt-1">
+          <div>
+            <div class="cv-item" style="margin-top:14px;">
+              <div class="cv-title" data-i18n="experience_title">ERVARING</div>
+              <div class="cv-sub" data-i18n="experience_sub">rollen en projecten</div>
+
+              <div class="cv-item">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp1_role">Vrijwilligerschef</p>
+                  <p class="cv-dates" data-i18n="exp1_dates">2023 – 2025</p>
+                </div>
+                <p class="cv-org" data-i18n="exp1_org">Daklozenopvang De Kloof en Testtafel.</p>
+                <p class="cv-text" data-i18n="exp1_text">
+                  Wekelijks zelfstandig maaltijden bereiden voor daklozen bij de Kloof en ondersteunend werk bij het fine-dining menu van Testtafel. Ook af en toe op festivals.
+                </p>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp2_role">DJ en evenementen organisator</p>
+                  <p class="cv-dates" data-i18n="exp2_dates">2022 – 2025</p>
+                </div>
+                <p class="cv-org" data-i18n="exp2_org">zzp</p>
+                <p class="cv-text" data-i18n="exp2_text">
+                  Optredens bij verschillende radios, clubs en festivals, o.a. Radio Radio, Radio TNP, Kanaal40 en Landjuweel Festival. Mede-oprichter van mpsoundsystem, een collectief dat allerlei gratis (muziek)evenementen organiseert.
+                </p>
+              </div>
+
+              <div class="cv-item" id="exp3_optional_en" style="display:none;">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp3_role">Live sound engineer & studio host</p>
+                  <p class="cv-dates" data-i18n="exp3_dates">2021 – 2025</p>
+                </div>
+                <p class="cv-org" data-i18n="exp3_org">Freelance/volunteer</p>
+                <p class="cv-text" data-i18n="exp3_text">
+                  Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.
+                </p>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp4_role">Data Scientist</p>
+                  <p class="cv-dates" data-i18n="exp4_dates">2021 – 2025</p>
+                </div>
+                <p class="cv-org" data-i18n="exp4_org">AFC Ajax en NIDAP, Amsterdam.</p>
+                <p class="cv-text" data-i18n="exp4_text">
+                  Verantwoordelijk voor o.a. data analyses van de beweging van spelers en de banen- en educatie markt.
+                </p>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp5_role">Filmtheater Kriterion</p>
+                  <p class="cv-dates" data-i18n="exp5_dates">2017 – 2022</p>
+                </div>
+                <p class="cv-org" data-i18n="exp5_org">Amsterdam.</p>
+                <p class="cv-text" data-i18n="exp5_text">
+                  Standaard bar- en keukenwerk. Daarnaast verschillende posities over tijd, zoals bestuurslid en coördinator van het sollicitatieproces, de PR en live-muziek.
+                </p>
+              </div>
+
+              <div class="cv-item">
+                <div class="cv-item-head">
+                  <p class="cv-role" data-i18n="exp6_role">Werkstudent</p>
+                  <p class="cv-dates" data-i18n="exp6_dates">2018 – 2019</p>
+                </div>
+                <p class="cv-org" data-i18n="exp6_org">Deloitte, Amsterdam.</p>
+                <p class="cv-text" data-i18n="exp6_text">
+                  Aandeel in projecten van cyber risk quantification.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card cvblock tilt-2 span-2 row-2">
-        <div>
-          <div class="cv-item" style="margin-top:14px;">
-            <div class="cv-title" data-i18n="interests_title">INTERESSES</div>
-            <div class="cv-sub" data-i18n="interests_sub">waar ik van aan ga</div>
-            <div class="pill-row" id="interestsPills">
-              <span class="tag" data-i18n="int1">bakken en koken</span>
-              <span class="tag" data-i18n="int2">muziek</span>
-              <span class="tag" data-i18n="int3">voetbal</span>
-              <span class="tag" data-i18n="int4">boulderen</span>
-              <span class="tag" data-i18n="int5">drummen</span>
-              <span class="tag" data-i18n="int6">film en fotografie</span>
+      <div id="col-b" class="masonry-col">
+        <!-- rechterkolom -->
+         <div class="card cvblock tilt-2">
+          <div>
+            <div class="cv-item" style="margin-top:14px;">
+              <div class="cv-title" data-i18n="skills_title">SKILLS</div>
+              <div class="cv-sub" data-i18n="skills_sub">korte lijst</div>
+              <div class="pill-row">
+                <span class="tag" data-i18n="skill1">planning & organisatie</span>
+                <span class="tag" data-i18n="skill2">snelle leerling</span>
+                <span class="tag" data-i18n="skill3">verantwoordelijkheidsgevoel</span>
+                <span class="tag" data-i18n="skill4">technisch onderlegd</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- EDUCATION -->
-      <div class="card cvblock tilt-3 span-4 row-2">
-        <div>
-          <div class="cv-title" data-i18n="edu_title">EDUCATIE</div>
-          <div class="cv-sub" data-i18n="edu_sub">opleidingen</div>
-
-          <div class="cv-item">
-            <div class="cv-item-head">
-              <p class="cv-role" data-i18n="edu1_role">Computational Science, MSc.</p>
-              <p class="cv-dates" data-i18n="edu1_dates">2019 – 2021</p>
+        <div class="card cvblock tilt-2">
+          <div>
+            <div class="cv-item" style="margin-top:14px;">
+              <div class="cv-title" data-i18n="interests_title">INTERESSES</div>
+              <div class="cv-sub" data-i18n="interests_sub">waar ik van aan ga</div>
+              <div class="pill-row" id="interestsPills">
+                <span class="tag" data-i18n="int1">bakken en koken</span>
+                <span class="tag" data-i18n="int2">muziek</span>
+                <span class="tag" data-i18n="int3">voetbal</span>
+                <span class="tag" data-i18n="int4">boulderen</span>
+                <span class="tag" data-i18n="int5">drummen</span>
+                <span class="tag" data-i18n="int6">film en fotografie</span>
+              </div>
             </div>
-            <p class="cv-org" data-i18n="edu1_org">Universiteit van Amsterdam</p>
-            <p class="cv-text" data-i18n="edu1_text">Thesis at AFC Ajax, cum Laude. GPA: 8.6.</p>
           </div>
+        </div>
 
-          <div class="cv-item">
-            <div class="cv-item-head">
-              <p class="cv-role" data-i18n="edu2_role">Natuur- & Sterrenkunde, BSc.</p>
-              <p class="cv-dates" data-i18n="edu2_dates">2014 – 2017</p>
-            </div>
-            <p class="cv-org" data-i18n="edu2_org">Universiteit van Amsterdam</p>
-            <p class="cv-text" data-i18n="edu2_text">BSc: Honours, University of Edinburgh uitwisseling, cum Laude. GPA 8.1.</p>
-          </div>
+        <!-- EDUCATION -->
+        <div class="card cvblock tilt-3">
+          <div>
+            <div class="cv-title" data-i18n="edu_title">EDUCATIE</div>
+            <div class="cv-sub" data-i18n="edu_sub">opleidingen</div>
 
-          <div class="cv-item">
-            <div class="cv-item-head">
-              <p class="cv-role" data-i18n="edu3_role">Natuur- & Sterrenkunde, MSc. (eerste helft)</p>
-              <p class="cv-dates" data-i18n="edu3_dates">2021 – 2022</p>
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="edu3_role">(Onafgerond) Natuur- & Sterrenkunde, MSc.</p>
+                <p class="cv-dates" data-i18n="edu3_dates">2021 – 2022</p>
+              </div>
+              <p class="cv-org" data-i18n="edu3_org">Universiteit van Amsterdam</p>
+              <p class="cv-text" data-i18n="edu3_text">MSc: Eerste helft van het programma. Track: GRAPPA. GPA: 8.7.</p>
             </div>
-            <p class="cv-org" data-i18n="edu3_org">Universiteit van Amsterdam</p>
-            <p class="cv-text" data-i18n="edu3_text">MSc: Eerste helft van het programma. Track: GRAPPA. GPA: 8.7.</p>
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="edu1_role">Computational Science, MSc.</p>
+                <p class="cv-dates" data-i18n="edu1_dates">2019 – 2021</p>
+              </div>
+              <p class="cv-org" data-i18n="edu1_org">Universiteit van Amsterdam</p>
+              <p class="cv-text" data-i18n="edu1_text">Thesis at AFC Ajax, cum Laude. GPA: 8.6.</p>
+            </div>
+
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <p class="cv-role" data-i18n="edu2_role">Natuur- & Sterrenkunde, BSc.</p>
+                <p class="cv-dates" data-i18n="edu2_dates">2014 – 2017</p>
+              </div>
+              <p class="cv-org" data-i18n="edu2_org">Universiteit van Amsterdam</p>
+              <p class="cv-text" data-i18n="edu2_text">BSc: Honours, University of Edinburgh uitwisseling, cum Laude. GPA 8.1.</p>
+            </div>
           </div>
         </div>
       </div>
     </main>
+      
+
+      
+
+      
 
     <footer>
       <a class="pill" href="home.html" data-i18n="pill_home">HOME</a>
-      <a class="pill" href="#" id="contactLink" data-i18n="pill_contact">CONTACT</a>
+      <a class="pill" href="contact.html" data-i18n="pill_contact">CONTACT</a>
     </footer>
   </div>
 
@@ -424,7 +418,7 @@
           edu2_org: "Universiteit van Amsterdam",
           edu2_text: "BSc: Honours, University of Edinburgh uitwisseling, cum Laude. GPA 8.1.",
 
-          edu3_role: "Natuur- & Sterrenkunde, MSc. (eerste helft)",
+          edu3_role: "(Onafgerond) Natuur- & Sterrenkunde, MSc.",
           edu3_dates: "2021 – 2022",
           edu3_org: "Universiteit van Amsterdam",
           edu3_text: "MSc: Eerste helft van het programma. Track: GRAPPA. GPA: 8.7.",
@@ -502,7 +496,7 @@
           edu2_org: "University of Amsterdam",
           edu2_text: "Honours, exchange to University of Edinburgh, cum Laude. GPA 8.1",
 
-          edu3_role: "Half of MSc. Physics and Astronomy",
+          edu3_role: "(Incomplete) MSc. Physics & Astronomy",
           edu3_dates: "2021 – 2022",
           edu3_org: "University of Amsterdam",
           edu3_text: "Completed first year of two year programme. Track: GRAPPA, GPA: 8.7",
@@ -565,24 +559,6 @@
           applyLang(btn.getAttribute("data-lang"));
         });
       });
-    })();
-  </script>
-
-  <script>
-    // contact (anti-scrape) – same pattern you used elsewhere
-    (function(){
-      const user = "yagelschoonderbeek";
-      const domain = "gmail.com";
-      const link = document.getElementById("contactLink");
-      const inline = document.getElementById("mailInline");
-
-      function goMail(e){
-        if(e) e.preventDefault();
-        window.location.href = "mailto:" + user + "@" + domain;
-      }
-
-      if(link) link.addEventListener("click", goMail);
-      if(inline) inline.addEventListener("click", goMail);
     })();
   </script>
 </body>
