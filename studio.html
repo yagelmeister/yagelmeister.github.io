@@ -65,10 +65,10 @@
         title: { nl: "OPENING", en: "OPENING" },
         desc:  { nl: "poster voor de studio opening", en: "poster for the studio opening" },
         photos: [
-          "images/muziek/muziekstudio/opening.jpg",
+          "images/muziek/muziekstudio/opening.webp",
         ],
         size:  "span-3 row-2",
-        tilt:  "tilt-2"
+        tilt:  "tilt-6"
       },
     ];
 
@@ -190,7 +190,7 @@
 
    function wireSliders(){
       var SPEED_AUTO = 60;       // px per soconde
-      var SPEED_USER = 180;       // px per soconde
+      var SPEED_USER = 180;      // px per soconde
       var AUTO_DELAY = 700;      // ms wachten na in-beeld komen / mouseleave
       var VIEW_THRESHOLD = 1.0;  // hoeveel van de slider in beeld moet zijn
 
@@ -299,7 +299,6 @@
           raf = requestAnimationFrame(tick);
         }
 
-
         function stopMove(){
           dir = 0;
           stopRAF();
@@ -323,7 +322,6 @@
           if(hovering) return;
 
           autoTimer = setTimeout(function(){
-            // check opnieuw op moment van starten
             if(!inView) return;
             if(hovering) return;
             startRAF(autoDir, true);
@@ -333,12 +331,31 @@
         function setHover(state){
           hovering = state;
           if(hovering){
-            // user neemt over
             stopAll();
           }else{
-            // user weg -> na delay auto door
             maybeScheduleAuto();
           }
+        }
+
+        function snap(oneDir){
+          stopAll();
+          recalc();
+          offset += oneDir * slideW;
+
+          if(slides.length >= 3){
+            var min = 0;
+            var max = (realCount + 1) * slideW;
+
+            if(offset >= max) offset = slideW;
+            if(offset <= min) offset = realCount * slideW;
+          }else{
+            var max2 = (slides.length - 1) * slideW;
+            if(offset >= max2) offset = 0;
+            if(offset < 0) offset = max2;
+          }
+
+          apply();
+          maybeScheduleAuto();
         }
 
         // init
@@ -353,14 +370,14 @@
           apply();
         });
 
-        // Hover gedrag (pauzeert auto zodra je erop zit)
+        // Hover gedrag
         frame.addEventListener("mouseenter", function(){ setHover(true); });
         frame.addEventListener("mouseleave", function(){
           setHover(false);
-          stopMove(); // stop ook manual push als je uit de slider gaat
+          stopMove();
         });
 
-        // User control via zones
+        // User control via zones (hover)
         leftZone.addEventListener("mouseenter", function(){
           setHover(true);
           startRAF(-1, false);
@@ -379,6 +396,16 @@
           setHover(false);
         });
 
+        // Click = snap 1 slide
+        leftZone.addEventListener("click", function(e){
+          e.preventDefault();
+          snap(-1);
+        });
+        rightZone.addEventListener("click", function(e){
+          e.preventDefault();
+          snap(1);
+        });
+
         // “API” voor IntersectionObserver
         frame.__sliderApi = {
           get inView(){ return inView; },
@@ -387,11 +414,9 @@
           maybeScheduleAuto: maybeScheduleAuto
         };
 
-        // observe in-view
         if(io){
           io.observe(frame);
         }else{
-          // fallback zonder IO: meteen schedulen
           inView = true;
           maybeScheduleAuto();
         }
