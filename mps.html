@@ -424,23 +424,26 @@
         function snap(oneDir){
           stopAll();
           recalc();
-          offset += oneDir * slideW;
+
+          // 🔑 eerst exact uitlijnen op huidige slide
+          var idx = Math.round(offset / slideW);
+          idx += oneDir;
 
           if(slides.length >= 3){
-            var min = 0;
-            var max = (realCount + 1) * slideW;
-
-            if(offset >= max) offset = slideW;
-            if(offset <= min) offset = realCount * slideW;
+            // rekening houden met clones
+            if(idx >= realCount + 1) idx = 1;
+            if(idx <= 0) idx = realCount;
           }else{
-            var max2 = (slides.length - 1) * slideW;
-            if(offset >= max2) offset = 0;
-            if(offset < 0) offset = max2;
+            var maxIdx = slides.length - 1;
+            if(idx > maxIdx) idx = 0;
+            if(idx < 0) idx = maxIdx;
           }
 
+          offset = idx * slideW;
           apply();
           maybeScheduleAuto();
         }
+
 
         // init
         recalc();
