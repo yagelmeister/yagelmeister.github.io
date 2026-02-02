@@ -205,6 +205,8 @@
           loopPhotos = photos.slice();
         }
 
+        var hasArrows = photos.length > 1;
+
         card.innerHTML =
           '<div>' +
             '<div class="label">' + escapeHtml(title) + '</div>' +
@@ -220,10 +222,13 @@
                   }).join("") +
                 '</div>' +
 
-                '<div class="slider-overlay" aria-hidden="true">' +
-                  '<div class="slider-hover left"></div>' +
-                  '<div class="slider-hover right"></div>' +
-                '</div>' +
+                (hasArrows
+                  ? '<div class="slider-overlay" aria-hidden="true">' +
+                      '<div class="slider-hover left"></div>' +
+                      '<div class="slider-hover right"></div>' +
+                    '</div>'
+                  : ''
+                ) +
 
               '</div>' +
             '</div>' +

@@ -69,6 +69,21 @@
         tilt:  "tilt-3"
       },
       {
+        title: { nl: "DE SERING & TESTTAFEL", en: "DE SERING & TESTTAFEL" },
+        desc:  { nl: "in 2024 en 2025 heb ik voor de volkskeuken van de sering en de fine dining van testtafel gekookt", en: "in 2024 and 2025, i cooked for the community kitchen of de sering and the fine dining of testtafel" },
+        photos: [
+          "images/koken/keuken/testtafel/tt1.webp",
+          "images/koken/keuken/testtafel/tt2.webp",
+          "images/koken/keuken/testtafel/tt3.webp",
+          "images/koken/keuken/testtafel/tt4.webp",
+          "images/koken/keuken/testtafel/tt5.webp",
+          "images/koken/keuken/testtafel/tt6.webp",
+          "images/koken/keuken/testtafel/tt7.webp",
+        ],
+        tilt:  "tilt-2"
+
+      },
+      {
         title: { nl: "MARUKIN RAMEN", en: "MARUKIN RAMEN" },
         desc:  { nl: "voor een paar maanden, heb ik in tokyo gyoza's en ramen deeg leren maken. af en toe ging kas mee", en: "for a few months, i learned how to make gyoza's and ramen dough in tokyo. sometimes, kas joined me" },
         photos: [
@@ -132,6 +147,8 @@
           loopPhotos = photos.slice();
         }
 
+        var hasArrows = photos.length > 1;
+
         card.innerHTML =
           '<div>' +
             '<div class="label">' + escapeHtml(title) + '</div>' +
@@ -147,16 +164,19 @@
                   }).join("") +
                 '</div>' +
 
-                '<div class="slider-overlay" aria-hidden="true">' +
-                  '<div class="slider-hover left"></div>' +
-                  '<div class="slider-hover right"></div>' +
-                '</div>' +
+                (hasArrows
+                  ? '<div class="slider-overlay" aria-hidden="true">' +
+                      '<div class="slider-hover left"></div>' +
+                      '<div class="slider-hover right"></div>' +
+                    '</div>'
+                  : ''
+                ) +
 
               '</div>' +
             '</div>' +
 
           '</div>';
-
+          
         var isMobile = window.matchMedia("(max-width: 760px)").matches;
 
         if(isMobile){
