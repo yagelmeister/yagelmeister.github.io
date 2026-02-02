@@ -219,7 +219,17 @@
 
                 '<div class="slider-track">' +
                   loopPhotos.map(function(p){
-                    return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
+                    var isVideo = p.toLowerCase().endsWith(".mp4");
+                    if(isVideo){
+                      return (
+                        '<video class="slide-video" ' +
+                        'muted autoplay loop playsinline preload="metadata">' +
+                          '<source src="' + escapeHtml(p) + '" type="video/mp4">' +
+                        '</video>'
+                      );
+                    }else{
+                      return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
+                    }
                   }).join("") +
                 '</div>' +
 
@@ -247,26 +257,61 @@
 
       wireSliders();
       autoAspectRatio();
+      kickVideos();
     }
+
+    function kickVideos(){
+        document.querySelectorAll(".slider-track video").forEach(function(v){
+          // Safari-proof: properties zetten (niet alleen attributes)
+          v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          v.autoplay = true;
+          v.loop = true;
+
+          // probeer te starten
+          var p = v.play();
+          if(p && typeof p.catch === "function"){
+            p.catch(function(){
+              // browser blokkeert nog steeds: geen drama
+              // (meestal gebeurt dit als muted niet "echt" pakt of video heeft rare audio track)
+            });
+          }
+        });
+      }
 
     function autoAspectRatio(){
       document.querySelectorAll(".slider-frame").forEach(function(frame){
-        var imgs = Array.from(frame.querySelectorAll("img"));
-        if(!imgs.length) return;
+        var media = Array.from(frame.querySelectorAll("img, video"));
+        if(!media.length) return;
 
-        var waits = imgs.map(function(img){
+        var waits = media.map(function(el){
           return new Promise(function(resolve){
-            if(img.complete && img.naturalWidth) return resolve();
-            img.addEventListener("load", resolve, { once:true });
-            img.addEventListener("error", resolve, { once:true });
+            if(el.tagName === "IMG"){
+              if(el.complete && el.naturalWidth) return resolve();
+              el.addEventListener("load", resolve, { once:true });
+              el.addEventListener("error", resolve, { once:true });
+            }else{
+              // VIDEO
+              if(el.readyState >= 1 && el.videoWidth) return resolve(); // metadata loaded
+              el.addEventListener("loadedmetadata", resolve, { once:true });
+              el.addEventListener("error", resolve, { once:true });
+            }
           });
         });
 
         Promise.all(waits).then(function(){
           var maxRatio = 0;
-          imgs.forEach(function(img){
-            var w = img.naturalWidth || 0;
-            var h = img.naturalHeight || 1;
+
+          media.forEach(function(el){
+            var w, h;
+            if(el.tagName === "IMG"){
+              w = el.naturalWidth || 0;
+              h = el.naturalHeight || 1;
+            }else{
+              w = el.videoWidth || 0;
+              h = el.videoHeight || 1;
+            }
             var r = w / h;
             if(r > maxRatio) maxRatio = r;
           });
