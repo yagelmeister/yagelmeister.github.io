@@ -46,15 +46,16 @@
 
     .embed-iframe{
       width: 100%;
-      height: 90.4vh;
+      height: min(90vh, 1100px);
+      min-height: 720px;
       border: 0;
       display: block;
-      background: transparent;
     }
 
     @media (max-width: 760px){
       .embed-iframe{
-        height: 70vh;
+        height: 80vh;
+        min-height: 520px;
       }
     }
   </style>
