@@ -2,6 +2,93 @@
 <html>
 <head>
   <script>
+    function renderSets(lang){
+      var colA = document.getElementById('col-a');
+      if(!colA) return;
+      var colB = document.getElementById('col-b');
+      if(!colB) return;
+
+      if(window.matchMedia("(max-width: 760px)").matches){
+        colB.innerHTML = "";
+      }
+
+      SETS.forEach(function(s, idx){
+        var card = document.createElement("div");
+        card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
+        card.setAttribute("data-set-card", "1");
+
+        var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
+        var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var sliderId = "slider-" + idx;
+
+        var labels = SLIDER_LABELS[lang] || SLIDER_LABELS.en;
+
+        var photos = Array.isArray(s.photos) ? s.photos : [];
+        var first = photos[0];
+        var last  = photos[photos.length - 1];
+
+        var loopPhotos;
+        if(photos.length > 1){
+          loopPhotos = [last].concat(photos).concat([first]); // clone-last + echte fotos + clone-first
+        }else{
+          loopPhotos = photos.slice();
+        }
+
+        var hasArrows = photos.length > 1;
+
+        card.innerHTML =
+          '<div>' +
+            '<div class="label">' + escapeHtml(title) + '</div>' +
+            '<div class="meta">photos</div>' +
+            (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
+
+            '<div class="slider" data-slider-id="' + sliderId + '">' +
+              '<div class="slider-frame" aria-label="photo slider">' +
+
+                '<div class="slider-track">' +
+                  loopPhotos.map(function(p){
+                    var isVideo = p.toLowerCase().endsWith(".mp4");
+                    if(isVideo){
+                      return (
+                        '<video class="slide-video" ' +
+                        'muted autoplay loop playsinline preload="metadata">' +
+                          '<source src="' + escapeHtml(p) + '" type="video/mp4">' +
+                        '</video>'
+                      );
+                    }else{
+                      return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
+                    }
+                  }).join("") +
+                '</div>' +
+
+                (hasArrows
+                  ? '<div class="slider-overlay" aria-hidden="true">' +
+                      '<div class="slider-hover left"></div>' +
+                      '<div class="slider-hover right"></div>' +
+                    '</div>'
+                  : ''
+                ) +
+
+              '</div>' +
+            '</div>' +
+
+          '</div>';
+
+        var isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+        if(isMobile){
+          colA.appendChild(card);     // alles onder elkaar in col-a
+        }else{
+          ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
+        }
+      });
+
+      wireSliders();
+      autoAspectRatio();
+      kickVideos();
+    }
+    
     (function(){
       var lang = localStorage.getItem("yagel_lang") || "en";
       document.documentElement.setAttribute("data-lang", lang);
@@ -146,92 +233,25 @@
       en: { prev: "prev", next: "next" }
     };
 
-    function renderSets(lang){
-      var colA = document.getElementById('col-a');
-      if(!colA) return;
-      var colB = document.getElementById('col-b');
-      if(!colB) return;
+    function kickVideos(){
+        document.querySelectorAll(".slider-track video").forEach(function(v){
+          // Safari-proof: properties zetten (niet alleen attributes)
+          v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          v.autoplay = true;
+          v.loop = true;
 
-      if(window.matchMedia("(max-width: 760px)").matches){
-        colB.innerHTML = "";
+          // probeer te starten
+          var p = v.play();
+          if(p && typeof p.catch === "function"){
+            p.catch(function(){
+              // browser blokkeert nog steeds: geen drama
+              // (meestal gebeurt dit als muted niet "echt" pakt of video heeft rare audio track)
+            });
+          }
+        });
       }
-
-      SETS.forEach(function(s, idx){
-        var card = document.createElement("div");
-        card.className = "card player " + (s.tilt || "") + " " + (s.size || "");
-        card.setAttribute("data-set-card", "1");
-
-        var title = (s.title && (s.title[lang] || s.title.nl)) || "Set";
-        var desc  = s.desc ? (s.desc[lang] || s.desc.nl || "") : "";
-        var photos = Array.isArray(s.photos) ? s.photos : [];
-        var sliderId = "slider-" + idx;
-
-        var labels = SLIDER_LABELS[lang] || SLIDER_LABELS.en;
-
-        var photos = Array.isArray(s.photos) ? s.photos : [];
-        var first = photos[0];
-        var last  = photos[photos.length - 1];
-
-        var loopPhotos;
-        if(photos.length > 1){
-          loopPhotos = [last].concat(photos).concat([first]); // clone-last + echte fotos + clone-first
-        }else{
-          loopPhotos = photos.slice();
-        }
-
-        var hasArrows = photos.length > 1;
-
-        card.innerHTML =
-          '<div>' +
-            '<div class="label">' + escapeHtml(title) + '</div>' +
-            '<div class="meta">photos</div>' +
-            (desc ? '<div class="desc">' + escapeHtml(desc) + '</div>' : '') +
-
-            '<div class="slider" data-slider-id="' + sliderId + '">' +
-              '<div class="slider-frame" aria-label="photo slider">' +
-
-                '<div class="slider-track">' +
-                  loopPhotos.map(function(p){
-                    var isVideo = p.toLowerCase().endsWith(".mp4");
-                    if(isVideo){
-                      return (
-                        '<video class="slide-video" ' +
-                        'muted autoplay loop playsinline preload="metadata">' +
-                          '<source src="' + escapeHtml(p) + '" type="video/mp4">' +
-                        '</video>'
-                      );
-                    }else{
-                      return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
-                    }
-                  }).join("") +
-                '</div>' +
-
-                (hasArrows
-                  ? '<div class="slider-overlay" aria-hidden="true">' +
-                      '<div class="slider-hover left"></div>' +
-                      '<div class="slider-hover right"></div>' +
-                    '</div>'
-                  : ''
-                ) +
-
-              '</div>' +
-            '</div>' +
-
-          '</div>';
-
-        var isMobile = window.matchMedia("(max-width: 760px)").matches;
-
-        if(isMobile){
-          colA.appendChild(card);     // alles onder elkaar in col-a
-        }else{
-          ((colA.offsetHeight <= colB.offsetHeight) ? colA : colB).appendChild(card);
-        }
-      });
-
-      wireSliders();
-      autoAspectRatio();
-      kickVideos();
-    }
 
     function autoAspectRatio(){
       document.querySelectorAll(".slider-frame").forEach(function(frame){
