@@ -146,8 +146,8 @@
         localStorage.setItem("yagel_lang", lang);
       }
 
-      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
-      if(!dict[initial]) initial = "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "en";
+      if(!dict[initial]) initial = "en";
       applyLang(initial);
 
       document.querySelectorAll(".lang-btn").forEach(function(btn){

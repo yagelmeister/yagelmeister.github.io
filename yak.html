@@ -358,8 +358,8 @@
       }
 
 
-      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "nl";
-      if(!dict[initial]) initial = "nl";
+      var initial = localStorage.getItem("yagel_lang") || document.documentElement.lang || "en";
+      if(!dict[initial]) initial = "en";
 
       // render once on load
       applyLang(initial);
@@ -368,9 +368,10 @@
 
       document.querySelectorAll(".lang-btn").forEach(function(btn){
         btn.addEventListener("click", function(){
-          applyLang(btn.getAttribute("data-lang"));
-          // renderFilters("data-lang");
-          // renderMixes("data-lang");
+          var lang = btn.getAttribute("data-lang");
+          applyLang(lang);
+          renderFilters(lang);
+          renderMixes(lang);
         });
       });
     })();
