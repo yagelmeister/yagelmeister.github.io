@@ -404,7 +404,7 @@
         var track = slider.querySelector(".slider-track");
         if(!frame || !track) return;
 
-        var slides = Array.from(track.querySelectorAll("img"));
+        var slides = Array.from(track.querySelectorAll("img, video"));
         if(slides.length < 2) return;
 
         var leftZone  = slider.querySelector(".slider-hover.left");
