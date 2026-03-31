@@ -166,6 +166,18 @@
       border-bottom-color: var(--line);
       opacity: 0.85;
     }
+
+    .visually-hidden{
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
   </style>
 </head>
 
@@ -184,6 +196,7 @@
     </header>
 
     <main class="masonry cv" aria-label="CV">
+      <h1 class="visually-hidden" data-i18n="page_title">CV</h1>
       <div id="col-a" class="masonry-col">
         <!-- linkerkolom -->
         <div class="card cvblock tilt-1">
@@ -191,7 +204,7 @@
             <div class="cv-title" data-i18n="profile_title">PROFIEL</div>
             <div class="cv-sub" data-i18n="profile_sub">korte intro</div>
             <p class="cv-text" data-i18n="profile_text">
-              Sociaal actieve chef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.
+              Sociaal actieve chef, data scientist en muziekfanaat. Ik ben flexibel, creatief, stress-bestendig, toegewijd en wordt graag uitgedaagd.
             </p>
           </div>
         </div>
@@ -205,7 +218,7 @@
               <div class="cv-item">
                 <div class="cv-item-head">
                   <p class="cv-role" data-i18n="exp1_role">Vrijwilligerschef</p>
-                  <p class="cv-dates" data-i18n="exp1_dates">2023 – 2025</p>
+                  <p class="cv-dates" data-i18n="exp1_dates">2023 – 2026</p>
                 </div>
                 <p class="cv-org" data-i18n="exp1_org">Daklozenopvang De Kloof en Testtafel.</p>
                 <p class="cv-text" data-i18n="exp1_text">
@@ -216,7 +229,7 @@
               <div class="cv-item">
                 <div class="cv-item-head">
                   <p class="cv-role" data-i18n="exp2_role">DJ en evenementen organisator</p>
-                  <p class="cv-dates" data-i18n="exp2_dates">2022 – 2025</p>
+                  <p class="cv-dates" data-i18n="exp2_dates">2022 – 2026</p>
                 </div>
                 <p class="cv-org" data-i18n="exp2_org">zzp</p>
                 <p class="cv-text" data-i18n="exp2_text">
@@ -224,7 +237,7 @@
                 </p>
               </div>
 
-              <div class="cv-item" id="exp3_optional_en" style="display:none;">
+              <div class="cv-item" id="exp3_optional_en" hidden aria-hidden="true">
                 <div class="cv-item-head">
                   <p class="cv-role" data-i18n="exp3_role">Live sound engineer & studio host</p>
                   <p class="cv-dates" data-i18n="exp3_dates">2021 – 2025</p>
@@ -238,7 +251,7 @@
               <div class="cv-item">
                 <div class="cv-item-head">
                   <p class="cv-role" data-i18n="exp4_role">Data Scientist</p>
-                  <p class="cv-dates" data-i18n="exp4_dates">2021 – 2025</p>
+                  <p class="cv-dates" data-i18n="exp4_dates">2021 – 2026</p>
                 </div>
                 <p class="cv-org" data-i18n="exp4_org">AFC Ajax en NIDAP, Amsterdam.</p>
                 <p class="cv-text" data-i18n="exp4_text">
@@ -367,21 +380,22 @@
       var dict = {
         nl: {
           name: "YA'GEL SCHOONDERBEEK",
+          page_title: "CV",
 
           profile_title: "PROFIEL",
           profile_sub: "korte intro",
-          profile_text: "Sociaal actieve chef, data scientist en muziekfanaat. Ik ben flexibel, creatief, bestendig tegen stress, toegewijd en vind het leuk uitgedaagd te worden.",
+          profile_text: "Sociaal actieve chef, data scientist en muziekfanaat. Ik ben flexibel, creatief, stress-bestendig, toegewijd en wordt graag uitgedaagd.",
 
           experience_title: "ERVARING",
           experience_sub: "rollen en projecten",
 
           exp1_role: "Vrijwilligerschef",
-          exp1_dates: "2023 – 2025",
-          exp1_org: "Daklozenopvang De Kloof en Testtafel.",
+          exp1_dates: "2023 – 2026",
+          exp1_org: "Daklozenopvang De Kloof, De Sering en Testtafel.",
           exp1_text: "Wekelijks zelfstandig maaltijden bereiden voor daklozen bij de Kloof en ondersteunend werk bij het fine-dining menu van Testtafel. Ook af en toe op festivals.",
 
           exp2_role: "DJ en evenementen organisator",
-          exp2_dates: "2022 – 2025",
+          exp2_dates: "2022 – 2026",
           exp2_org: "zzp.",
           exp2_text: "Optredens bij verschillende radios, clubs en festivals, o.a. Radio Radio, Radio TNP, Kanaal40 en Landjuweel Festival. Mede-oprichter van mpsoundsystem, een collectief dat allerlei gratis (muziek)evenementen organiseert.",
 
@@ -392,7 +406,7 @@
           exp3_text: "Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.",
 
           exp4_role: "Data Scientist",
-          exp4_dates: "2021 – 2025",
+          exp4_dates: "2021 – 2026",
           exp4_org: "AFC Ajax en NIDAP, Amsterdam.",
           exp4_text: "Verantwoordelijk voor o.a. data analyses van de beweging van spelers en de banen- en educatie markt.",
 
@@ -433,10 +447,11 @@
           interests_title: "Interesses",
           interests_sub: "waar ik van aan ga",
           int1: "bakken en koken",
-          int2: "muziek in vele vormen",
+          int2: "muziek",
           int3: "voetbal",
           int4: "boulderen",
-          int6: "(fotografische) kunst",
+          int5: "drummen",
+          int6: "film en fotografie",
 
           pill_home: "HOME",
           pill_contact: "CONTACT"
@@ -444,21 +459,22 @@
 
         en: {
           name: "YA'GEL SCHOONDERBEEK",
+          page_title: "CV",
 
           profile_title: "PROFILE",
           profile_sub: "short intro",
-          profile_text: "Socially active chef, music head and data scientist. I am sharp-minded, flexible, stress-resistant, dedicated and like to be challenged.",
+          profile_text: "Socially active chef, music head and data scientist. I am sharp-minded, flexible, stress-resistant, dedicated and keen to be challenged.",
 
           experience_title: "EXPERIENCE",
           experience_sub: "roles & projects",
 
           exp1_role: "Volunteer chef",
-          exp1_dates: "2023 – 2025",
-          exp1_org: "Testtafel & Homeless shelter De Kloof.",
+          exp1_dates: "2023 – 2026",
+          exp1_org: "De Sering, Testtafel & Homeless shelter De Kloof.",
           exp1_text: "Responsible for meal preparation and service for homeless visitors at De Kloof, and assisting with the fine-dining menu at Testtafel. Occasionally supporting at festival kitchens and a gyoza training at Marukin Ramen in Tokyo.",
 
           exp2_role: "DJ and event organiser",
-          exp2_dates: "2022 – 2025",
+          exp2_dates: "2022 – 2026",
           exp2_org: "Freelance/volunteer.",
           exp2_text: "Performances at radios and live venues, such as Radio TNP, RRFM, Kanaal40 and Landjuweel Festival. Co-founder of mpsoundsystem, a collective that aims to organise all sorts of free (music) events through second-hand gear and community building.",
 
@@ -468,7 +484,7 @@
           exp3_text: "Sound tasks at Kriterion, Scugnizzo, Slim Radio and RRFM.",
 
           exp4_role: "Data scientist",
-          exp4_dates: "2021 – 2025",
+          exp4_dates: "2021 – 2026",
           exp4_org: "AFC Ajax & NIDAP.",
           exp4_text: "Responsible for data (analyses) on player movement and the job/education market.",
 
@@ -512,11 +528,12 @@
 
           interests_title: "Interests",
           interests_sub: "what I’m into",
-          int1: "music in many forms",
-          int2: "football",
-          int4: "baking / cooking",
-          int5: "bouldering",
-          int6: "(photographic) art",
+          int1: "baking / cooking",
+          int2: "music",
+          int3: "football",
+          int4: "bouldering",
+          int5: "drumming",
+          int6: "film and photography",
 
           pill_home: "HOME",
           pill_contact: "CONTACT"
@@ -543,6 +560,13 @@
             btn.getAttribute("data-lang") === lang ? "true" : "false"
           );
         });
+
+        var exp3 = document.getElementById("exp3_optional_en");
+        if(exp3){
+          var showExp3 = lang === "en";
+          exp3.hidden = !showExp3;
+          exp3.setAttribute("aria-hidden", showExp3 ? "false" : "true");
+        }
 
         // Persistence across pages
         localStorage.setItem("yagel_lang", lang);
