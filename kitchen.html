@@ -34,7 +34,7 @@
       <div class="rule"></div>
     </header>
 
-    <main class="masonry" aria-label="DE KLOOF">
+    <main class="masonry" aria-label="Kitchen experiences">
       <div id="col-a" class="masonry-col">
         <div class="card intro tilt-1">
             <div class="label" data-i18n="intro_label">Keuken ervaringen</div>
@@ -187,7 +187,7 @@
                     if(isVideo){
                       return (
                         '<video class="slide-video" ' +
-                        'muted autoplay loop playsinline preload="' + (shouldPrioritize ? 'metadata' : 'none') + '">' +
+                        'muted loop playsinline preload="' + (shouldPrioritize ? 'metadata' : 'none') + '">' +
                           '<source src="' + escapeHtml(p) + '" type="video/mp4">' +
                         '</video>'
                       );
@@ -225,24 +225,13 @@
     }
 
     function kickVideos(){
-        document.querySelectorAll(".slider-track video").forEach(function(v){
-          // Safari-proof: properties zetten (niet alleen attributes)
-          v.muted = true;
-          v.defaultMuted = true;
-          v.playsInline = true;
-          v.autoplay = true;
-          v.loop = true;
-
-          // probeer te starten
-          var p = v.play();
-          if(p && typeof p.catch === "function"){
-            p.catch(function(){
-              // browser blokkeert nog steeds: geen drama
-              // (meestal gebeurt dit als muted niet "echt" pakt of video heeft rare audio track)
-            });
-          }
-        });
-      }
+      document.querySelectorAll(".slider-frame").forEach(function(frame){
+        var api = frame.__sliderApi;
+        if(api && typeof api.syncMedia === "function"){
+          api.syncMedia(true);
+        }
+      });
+    }
 
     function autoAspectRatio(){
       document.querySelectorAll(".slider-frame").forEach(function(frame){
@@ -301,7 +290,9 @@
 
           if(!api.inView){
             api.stopAll();
+            api.pauseMedia();
           }else{
+            api.syncMedia(true);
             api.maybeScheduleAuto();
           }
         });
@@ -334,9 +325,69 @@
         var autoDir = 1; // standaard auto naar rechts
 
         var api = { isAuto: false };
+        var lastActiveIndex = -1;
 
         function apply(){
           track.style.transform = "translateX(" + (-offset) + "px)";
+          syncMedia(false);
+        }
+
+        function configureVideo(v, mode){
+          v.muted = true;
+          v.defaultMuted = true;
+          v.playsInline = true;
+          v.loop = true;
+          v.autoplay = (mode === "play");
+
+          if(mode === "play" || mode === "warm"){
+            if(v.preload !== "auto") v.preload = "auto";
+            if(v.readyState === 0){
+              try{
+                v.load();
+              }catch(_err){}
+            }
+          }else if(v.preload !== "metadata"){
+            v.preload = "metadata";
+          }
+
+          if(mode === "play"){
+            var p = v.play();
+            if(p && typeof p.catch === "function"){
+              p.catch(function(){});
+            }
+            return;
+          }
+
+          v.pause();
+        }
+
+        function pauseAllMedia(){
+          slides.forEach(function(el){
+            if(el.tagName === "VIDEO"){
+              configureVideo(el, "idle");
+            }
+          });
+        }
+
+        function syncMedia(force){
+          if(!slideW || !slides.length) return;
+          var activeIndex = Math.round(offset / slideW);
+          if(!force && activeIndex === lastActiveIndex) return;
+          lastActiveIndex = activeIndex;
+
+          slides.forEach(function(el, mediaIndex){
+            if(el.tagName !== "VIDEO") return;
+            var distance = Math.abs(mediaIndex - activeIndex);
+            if(distance === 0){
+              configureVideo(el, "play");
+              return;
+            }
+            if(distance === 1){
+              configureVideo(el, "warm");
+              return;
+            }
+            configureVideo(el, "idle");
+          });
         }
 
         function recalc(){
@@ -511,6 +562,8 @@
           get inView(){ return inView; },
           set inView(v){ inView = !!v; },
           stopAll: stopAll,
+          pauseMedia: pauseAllMedia,
+          syncMedia: syncMedia,
           maybeScheduleAuto: maybeScheduleAuto
         };
 
@@ -518,6 +571,7 @@
           io.observe(frame);
         }else{
           inView = true;
+          syncMedia(true);
           maybeScheduleAuto();
         }
       });

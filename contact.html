@@ -36,19 +36,19 @@
       <div class="rule"></div>
     </header>
 
-    <main class="masonry" aria-label="DE KLOOF">
+    <main class="masonry" aria-label="Contact">
       <div id="col-a" class="masonry-col">
         <div class="card mail tilt-1">
-            <div class="label" data-i18n="mail_label">MAIL</a></div>
-            <div class="meta" data-i18n="mail_meta">yagelschoonderbeek@gmail.com</div>
+            <div class="label" data-i18n="mail_label">MAIL</div>
+            <div class="meta"><a href="mailto:yagelschoonderbeek@gmail.com" data-i18n="mail_meta">yagelschoonderbeek@gmail.com</a></div>
         </div>
         <div class="card intro tilt-2">
-            <div class="label" data-i18n="intro_label">SOUNDCLOUD</a></div>
-            <div class="meta" data-i18n="intro_meta"><a href="http://soundcloud.com/yak_3000">http://soundcloud.com/yak_3000</a></div>
+            <div class="label" data-i18n="soundcloud_label">SOUNDCLOUD</div>
+            <div class="meta"><a href="https://soundcloud.com/yak_3000" target="_blank" rel="noopener noreferrer" data-i18n="soundcloud_meta">soundcloud.com/yak_3000</a></div>
         </div>
         <div class="card intro tilt-1">
-            <div class="label" data-i18n="intro_label">INSTAGRAM</a></div>
-            <div class="meta" data-i18n="intro_meta"><a href="http://instagram.com/__yak3000/">http://instagram.com/__yak3000/</a></div>
+            <div class="label" data-i18n="instagram_label">INSTAGRAM</div>
+            <div class="meta"><a href="https://instagram.com/__yak3000/" target="_blank" rel="noopener noreferrer" data-i18n="instagram_meta">instagram.com/__yak3000/</a></div>
         </div>
       </div>
 
@@ -70,8 +70,22 @@
   <script>
     (function(){
       var dict = {
-        nl: {},
-        en: {}
+        nl: {
+          mail_label: "MAIL",
+          mail_meta: "yagelschoonderbeek@gmail.com",
+          soundcloud_label: "SOUNDCLOUD",
+          soundcloud_meta: "soundcloud.com/yak_3000",
+          instagram_label: "INSTAGRAM",
+          instagram_meta: "instagram.com/__yak3000/"
+        },
+        en: {
+          mail_label: "MAIL",
+          mail_meta: "yagelschoonderbeek@gmail.com",
+          soundcloud_label: "SOUNDCLOUD",
+          soundcloud_meta: "soundcloud.com/yak_3000",
+          instagram_label: "INSTAGRAM",
+          instagram_meta: "instagram.com/__yak3000/"
+        }
       };
 
       function applyLang(lang){

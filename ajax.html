@@ -86,6 +86,76 @@
       pointer-events:none;
     }
 
+    .pdf-preview{
+      position: relative;
+      min-height: min(72vh, 820px);
+      background: #0d0d0d;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .pdf-preview[hidden],
+    .pdf-frame[hidden]{
+      display: none;
+    }
+
+    .pdf-preview img{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .pdf-preview::before{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(9,9,9,0.08) 0%, rgba(9,9,9,0.72) 100%);
+      pointer-events: none;
+    }
+
+    .pdf-preview-copy{
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 460px;
+      padding: 18px;
+      color: #fff;
+    }
+
+    .pdf-preview-copy p{
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+
+    .pdf-load-btn{
+      border: 1.5px solid rgba(255,255,255,0.88);
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font: inherit;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .pdf-load-btn:hover{
+      background: rgba(255,255,255,0.2);
+    }
+
     .pdf-frame{
       width: 100%;
       height: 90vh;
@@ -138,11 +208,18 @@ De output is deze publicatie, waarin ik de methode en bevindingen uitwerk.
       </section>
 
       <section class="pdf-wrap" aria-label="Publicatie PDF">
-        <!-- Update this path to your actual pdf location -->
-        <iframe class="pdf-frame" id="pdfFrame" title="Ajax publication PDF"></iframe>
+        <div class="pdf-preview" id="pdfPreview">
+          <img src="images/data/ajax/football.webp" alt="" decoding="async" />
+          <div class="pdf-preview-copy">
+            <button class="pdf-load-btn" id="pdfLoad" type="button" data-i18n="open_inline">Open publication</button>
+            <p data-i18n="pdf_note">The PDF loads inline only when you open it, so this page stays light at first.</p>
+          </div>
+        </div>
+
+        <iframe class="pdf-frame" id="pdfFrame" title="Ajax publication PDF" hidden loading="lazy"></iframe>
 
         <div class="pdf-fallback">
-          <span data-i18n="fallback">Werkt de embedded PDF niet? Download ‘m hier:</span>
+          <span data-i18n="fallback">Liever meteen het volledige bestand?</span>
           <a id="pdfDownload" href="#" download data-i18n="download">Download PDF</a>
         </div>
       </section>
@@ -158,13 +235,31 @@ De output is deze publicatie, waarin ik de methode en bevindingen uitwerk.
   <script>
     /* set PDF path once */
     (function(){
-      var PDF_SRC = "images/data/ajax/publication.pdf";
+      var PDF_FILE = "images/data/ajax/publication.pdf";
+      var PDF_INLINE_SRC = PDF_FILE + "#page=1&view=FitH";
 
       var frame = document.getElementById("pdfFrame");
+      var preview = document.getElementById("pdfPreview");
+      var trigger = document.getElementById("pdfLoad");
       var dl = document.getElementById("pdfDownload");
 
-      if(frame) frame.src = PDF_SRC;
-      if(dl) dl.href = PDF_SRC;
+      function loadPdf(){
+        if(!frame) return;
+        if(!frame.getAttribute("src")){
+          frame.src = PDF_INLINE_SRC;
+        }
+        frame.hidden = false;
+        if(preview) preview.hidden = true;
+        if(trigger) trigger.setAttribute("aria-expanded", "true");
+      }
+
+      if(trigger){
+        trigger.setAttribute("aria-controls", "pdfFrame");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.addEventListener("click", loadPdf);
+      }
+
+      if(dl) dl.href = PDF_FILE;
     })();
   </script>
 
@@ -183,7 +278,9 @@ De output is deze publicatie, waarin ik de methode en bevindingen uitwerk.
           title: "AFC Ajax",
           intro:
 "In dit project onderzocht ik beweging en passing patronen in professioneel voetbal.\nDe output is deze publicatie, waarin ik de methode en bevindingen uitwerk.",
-          fallback: "Werkt de embedded PDF niet? Download ‘m hier:",
+          open_inline: "Open publicatie",
+          pdf_note: "De PDF wordt pas inline geladen als je hem opent, zodat de pagina eerst licht blijft.",
+          fallback: "Liever meteen het volledige bestand?",
           download: "Download PDF",
           pill_home: "HOME",
           pill_back: "DATA",
@@ -194,7 +291,9 @@ De output is deze publicatie, waarin ik de methode en bevindingen uitwerk.
           title: "AFC Ajax",
           intro:
 "In this project I studied movement and passing patterns in professional football.\nThe output is this publication, where I describe the method and findings.",
-          fallback: "If the embedded PDF doesn’t load, download it here:",
+          open_inline: "Open publication",
+          pdf_note: "The PDF loads inline only when you open it, so this page stays light at first.",
+          fallback: "Prefer the full file right away?",
           download: "Download PDF",
           pill_home: "HOME",
           pill_back: "DATA",
