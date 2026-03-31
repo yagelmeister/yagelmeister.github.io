@@ -72,7 +72,7 @@
 
       <a class="card tilt-3" href="studies.html">
         <div>
-          <video class="card-image" src="images/data/studie/gridanimatie.mp4" autoplay="true" muted loop playsinline></video>
+          <video class="card-image" src="images/data/studie/gridanimatie-web.mp4" autoplay="true" muted loop playsinline preload="metadata"></video>
           <div class="label" data-i18n="studies_label">COMPUTATIONAL SCIENCE</div>
           <div class="meta" data-i18n="studies_meta">models created at the university</div>
         </div>
@@ -152,5 +152,15 @@
       });
     })();
   </script>
+  <script>
+    window.YAGEL_PREFETCH_CONFIG = {
+      pages: [
+        { href: "ajax.html" },
+        { href: "nidap.html" },
+        { href: "studies.html", warmGalleries: 1, mediaPerGallery: 2 }
+      ]
+    };
+  </script>
+  <script src="prefetch.js"></script>
 </body>
 </html>

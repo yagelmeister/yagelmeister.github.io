@@ -160,5 +160,16 @@
       });
     })();
   </script>
+
+  <script>
+    window.YAGEL_PREFETCH_CONFIG = {
+      pages: [
+        { href: "yak.html" },
+        { href: "mps.html", warmGalleries: 2, mediaPerGallery: 1 },
+        { href: "studio.html", warmGalleries: 1, mediaPerGallery: 2 }
+      ]
+    };
+  </script>
+  <script src="prefetch.js"></script>
 </body>
 </html>

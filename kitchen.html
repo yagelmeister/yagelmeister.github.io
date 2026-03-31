@@ -180,17 +180,19 @@
               '<div class="slider-frame" aria-label="photo slider">' +
 
                 '<div class="slider-track">' +
-                  loopPhotos.map(function(p){
+                  loopPhotos.map(function(p, mediaIndex){
                     var isVideo = p.toLowerCase().endsWith(".mp4");
+                    var isPrimarySlide = photos.length > 1 ? mediaIndex === 1 : mediaIndex === 0;
+                    var shouldPrioritize = idx < 2 && isPrimarySlide;
                     if(isVideo){
                       return (
                         '<video class="slide-video" ' +
-                        'muted autoplay loop playsinline preload="metadata">' +
+                        'muted autoplay loop playsinline preload="' + (shouldPrioritize ? 'metadata' : 'none') + '">' +
                           '<source src="' + escapeHtml(p) + '" type="video/mp4">' +
                         '</video>'
                       );
                     }else{
-                      return '<img loading="eager" decoding="async" src="' + escapeHtml(p) + '" alt="">';
+                      return '<img loading="' + (shouldPrioritize ? 'eager' : 'lazy') + '" fetchpriority="' + (shouldPrioritize ? 'high' : 'low') + '" decoding="async" src="' + escapeHtml(p) + '" alt="">';
                     }
                   }).join("") +
                 '</div>' +
@@ -246,41 +248,40 @@
       document.querySelectorAll(".slider-frame").forEach(function(frame){
         var media = Array.from(frame.querySelectorAll("img, video"));
         if(!media.length) return;
+        var primary = media.length >= 3 ? media[1] : media[0];
+        frame.style.aspectRatio = String(16/9);
 
-        var waits = media.map(function(el){
-          return new Promise(function(resolve){
-            if(el.tagName === "IMG"){
-              if(el.complete && el.naturalWidth) return resolve();
-              el.addEventListener("load", resolve, { once:true });
-              el.addEventListener("error", resolve, { once:true });
-            }else{
-              // VIDEO
-              if(el.readyState >= 1 && el.videoWidth) return resolve(); // metadata loaded
-              el.addEventListener("loadedmetadata", resolve, { once:true });
-              el.addEventListener("error", resolve, { once:true });
-            }
-          });
-        });
+        function applyAspect(el){
+          var w, h;
+          if(el.tagName === "IMG"){
+            w = el.naturalWidth || 0;
+            h = el.naturalHeight || 0;
+          }else{
+            w = el.videoWidth || 0;
+            h = el.videoHeight || 0;
+          }
+          if(!w || !h) return false;
+          frame.style.aspectRatio = String(w / h);
+          return true;
+        }
 
-        Promise.all(waits).then(function(){
-          var maxRatio = 0;
+        if(applyAspect(primary)) return;
 
-          media.forEach(function(el){
-            var w, h;
-            if(el.tagName === "IMG"){
-              w = el.naturalWidth || 0;
-              h = el.naturalHeight || 1;
-            }else{
-              w = el.videoWidth || 0;
-              h = el.videoHeight || 1;
-            }
-            var r = w / h;
-            if(r > maxRatio) maxRatio = r;
-          });
+        if(primary.tagName === "IMG"){
+          primary.addEventListener("load", function(){
+            applyAspect(primary);
+          }, { once:true });
+          return;
+        }
 
-          if(!maxRatio || !isFinite(maxRatio)) maxRatio = 16/9;
-          frame.style.aspectRatio = String(maxRatio);
-        });
+        if(primary.readyState >= 1 && primary.videoWidth){
+          applyAspect(primary);
+          return;
+        }
+
+        primary.addEventListener("loadedmetadata", function(){
+          applyAspect(primary);
+        }, { once:true });
       });
     }
 
