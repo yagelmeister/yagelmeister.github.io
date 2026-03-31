@@ -1,3 +1,16 @@
+<!--  RUN THIS FOR IMAGES:
+find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.RAW" \) -print0 \
+| xargs -0 -I{} sh -c '
+  in="{}"
+  tmp="${in%.*}.tmp.webp"
+  out="${in%.*}.webp"
+
+  cwebp "$in" -resize 1600 0 -q 82 -metadata none -o "$tmp" \
+  && mv "$tmp" "$out" \
+  && rm "$in"
+'
+-->
+
 <!doctype html>
 <html>
 <head>
@@ -60,6 +73,18 @@
 
     var SETS = [
       {
+        title: { nl: "NASI MET ROEL", en: "NASI WITH ROEL" },
+        desc:  { nl: "nasi met doperwten, tofu saté, gebakken ei en rode ui op zuur", en: "nasi with green peas, tofu satay, fried egg and pickled red onion" },
+        photos: [
+          "images/koken/daklozenopvang/nasi roel/nasi1.webp",
+          "images/koken/daklozenopvang/nasi roel/nasi2.webp",
+          "images/koken/daklozenopvang/nasi roel/nasi3.webp",
+          "images/koken/daklozenopvang/nasi roel/nasi4.webp",
+          "images/koken/daklozenopvang/nasi roel/nasi5.webp",
+        ],
+        tilt:  "tilt-1"
+      },
+      {
         title: { nl: "PASTA IN BRODO", en: "PASTA IN BRODO" },
         desc:  { nl: "italiaanse bonensoep met pastabladen en gekarameliseerde kool", en: "italian bean soup with pasta sheets and caramalised cabbage" },
         photos: [
@@ -89,8 +114,8 @@
         tilt:  "tilt-1"
       },
       {
-        title: { nl: "OKONOMIYAKI", en: "OKONOMIYAKI" },
-        desc:  { nl: "japanse pannekoeken samen met martijn en delfi gemaakt", en: "japanese pancakes made together with martijn and delfi" },
+        title: { nl: "OKONOMIYAKI MET MARTIJN EN DELFI", en: "OKONOMIYAKI WITH MARTIJN AND DELFI" },
+        desc:  { nl: "japanse pannekoeken van kool en champignonnen", en: "japanese pancakes with cabbage and mushrooms" },
         photos: [
           "images/koken/daklozenopvang/okonomiyaki/oko1.webp",
           "images/koken/daklozenopvang/okonomiyaki/oko2.webp",
