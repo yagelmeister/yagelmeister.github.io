@@ -76,10 +76,12 @@
     </header>
 
     <main aria-label="Spreiding visualisatie">
-      <div class="embed-wrap">
+      <div class="embed-wrap embed-wrap--spreiding">
         <iframe
-          class="embed-iframe"
+          id="nidap-spreiding"
+          class="embed-iframe embed-iframe--spreiding"
           src="https://tools.nidap.com/Spreiding/Regio_visualisatie.html"
+          title="NIDAP spreiding visualisatie"
           loading="lazy"
           referrerpolicy="no-referrer"
           allowfullscreen
@@ -93,6 +95,55 @@
       <a class="pill" href="contact.html" data-i18n="pill_contact">CONTACT</a>
     </footer>
   </div>
+
+  <script>
+    (function(){
+      var lastIframeWidth = 0;
+
+      function getSpreidingIframe(){
+        return document.getElementById("nidap-spreiding");
+      }
+
+      function getIframeWidth(iframe){
+        return Math.round(iframe.getBoundingClientRect().width);
+      }
+
+      function rememberIframeWidth(){
+        var iframe = getSpreidingIframe();
+        if (!iframe) return;
+        lastIframeWidth = getIframeWidth(iframe);
+      }
+
+      window.addEventListener("resize", function() {
+        var iframe = getSpreidingIframe();
+        if (!iframe) return;
+
+        var iframeWidth = getIframeWidth(iframe);
+        if (!lastIframeWidth) {
+          lastIframeWidth = iframeWidth;
+          return;
+        }
+
+        if (Math.abs(iframeWidth - lastIframeWidth) > 1) {
+          lastIframeWidth = iframeWidth;
+          iframe.style.height = "";
+        }
+      });
+
+      window.addEventListener("message", function(event) {
+        if (event.origin !== "https://tools.nidap.com") return;
+        if (!event.data || event.data.type !== "nidap-spreiding-height") return;
+
+        var iframe = getSpreidingIframe();
+        if (!iframe) return;
+
+        iframe.style.height = event.data.height + "px";
+        rememberIframeWidth();
+      });
+
+      rememberIframeWidth();
+    })();
+  </script>
 
   <script>
     /* theme */
