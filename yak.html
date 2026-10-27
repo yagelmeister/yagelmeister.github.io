@@ -43,6 +43,11 @@
       background: transparent;
     }
 
+    /* link-only cards (sources without an embeddable player) */
+    .embed .pill{
+      display:inline-block;
+    }
+
     /* SoundCloud player heights */
     .sc-h-sm iframe{ height: 166px; }
     .sc-h-md iframe{ height: 240px; }
@@ -125,9 +130,18 @@
       - title: { nl: "...", en: "..." }
       - desc:  { nl: "...", en: "..." }  (optional)
       - url: SoundCloud set/track url
+      - link + source: for shows without an embeddable player; renders a
+        card that links out instead (e.g. link: "https://...", source: "echobox")
     */
     var MIXES = [
-      
+
+      {
+        title: { nl: "Echobox — 21.10.2026", en: "Echobox — 21.10.2026" },
+        tags:  ["trancy angelic", "float house"],
+        link:  "https://www.echobox.radio/shows/yak",
+        source: "echobox",
+        tilt:  "tilt-2"
+      },
       {
         title: { nl: "Radio TNP — 25.09.2026", en: "Radio TNP — 25.09.2026" },
         // desc:  { nl: "slow jams, groove en balearica", en: "slow jams, groove and balearica" },
@@ -282,20 +296,29 @@
 
           var title = (m.title && (m.title[lang] || m.title.nl)) || "Mix";
           var tags = (m.tags || []);
+          var source = m.source || "soundcloud";
+
+          var body = m.link
+            ? '<div class="embed">' +
+                '<a class="pill" href="' + escapeHtml(m.link) + '" target="_blank" rel="noopener">' +
+                  escapeHtml(lang === "nl" ? "luister op " + source : "listen on " + source) + ' ↗' +
+                '</a>' +
+              '</div>'
+            : '<div class="embed ' + (m.size || "") + '">' +
+                '<iframe loading="lazy" allow="autoplay" src="' + scEmbedSrc(m.url) + '"></iframe>' +
+              '</div>';
 
           card.innerHTML =
             '<div>' +
               '<div class="label">' + escapeHtml(title) + '</div>' +
-              '<div class="meta">soundcloud</div>' +
+              '<div class="meta">' + escapeHtml(source) + '</div>' +
               (tags.length
                 ? '<div class="tags">' + tags.map(function(t){
                     return '<span class="tag">' + escapeHtml(t) + '</span>';
                   }).join('') + '</div>'
                 : ''
               ) +
-              '<div class="embed ' + (m.size || "") + '">' +
-                '<iframe loading="lazy" allow="autoplay" src="' + scEmbedSrc(m.url) + '"></iframe>' +
-              '</div>' +
+              body +
             '</div>';
           
         var isMobile = window.matchMedia("(max-width: 760px)").matches;
