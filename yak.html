@@ -43,9 +43,88 @@
       background: transparent;
     }
 
-    /* link-only cards (sources without an embeddable player) */
-    .embed .pill{
-      display:inline-block;
+    /* link-out "player" for sources without an embeddable player (echobox);
+       sized and laid out like the SoundCloud widget */
+    .ext-player{
+      display:flex;
+      height: 166px;
+      padding: 10px;
+      box-sizing: border-box;
+      background:#fff;
+      color:#111;
+      text-decoration:none;
+      overflow:hidden;
+    }
+    .ext-player img{
+      width: 146px;
+      height: 146px;
+      object-fit: cover;
+      object-position: center 30%;
+      flex: 0 0 auto;
+      display:block;
+    }
+    .ext-body{
+      flex: 1 1 auto;
+      min-width: 0;
+      display:flex;
+      flex-direction:column;
+      padding: 0 0 0 12px;
+      font-family: var(--font-mono);
+      text-transform: none;
+    }
+    .ext-top{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .ext-play{
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background:#111;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 13px;
+      padding-left: 3px;
+      box-sizing: border-box;
+      transition: transform 160ms ease;
+    }
+    .ext-player:hover .ext-play{ transform: scale(1.08); }
+    .ext-source{
+      font-size: 11px;
+      color:#666;
+    }
+    .ext-track{
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* echobox's rainbow bar stands in for the waveform */
+    .ext-bar{
+      display:flex;
+      gap: 3px;
+      height: 10px;
+      margin-top: auto;
+    }
+    .ext-bar span{ flex:1; border-radius: 999px; }
+    .ext-bar span:nth-child(1){ background:#ee7b3c; }
+    .ext-bar span:nth-child(2){ background:#3b78d0; }
+    .ext-bar span:nth-child(3){ background:#a14fc9; }
+    .ext-bar span:nth-child(4){ background:#e8505b; }
+    .ext-bar span:nth-child(5){ background:#f2c230; }
+    .ext-bar span:nth-child(6){ background:#3e9f7c; }
+    .ext-foot{
+      margin-top: 8px;
+      font-size: 10px;
+      color:#666;
+    }
+
+    @media (max-width: 420px){
+      .ext-player img{ width: 110px; }
     }
 
     /* SoundCloud player heights */
@@ -131,7 +210,8 @@
       - desc:  { nl: "...", en: "..." }  (optional)
       - url: SoundCloud set/track url
       - link + source: for shows without an embeddable player; renders a
-        card that links out instead (e.g. link: "https://...", source: "echobox")
+        player-style block that links out instead (e.g. link: "https://...", source: "echobox")
+        with optional image (artwork) and track (title shown in the block)
     */
     var MIXES = [
 
@@ -140,6 +220,8 @@
         tags:  ["trancy angelic", "float house"],
         link:  "https://www.echobox.radio/shows/yak",
         source: "echobox",
+        image: "images/muziek/yak/echobox_yak.webp",
+        track: "yak #1",
         tilt:  "tilt-2"
       },
       {
@@ -300,8 +382,21 @@
 
           var body = m.link
             ? '<div class="embed">' +
-                '<a class="pill" href="' + escapeHtml(m.link) + '" target="_blank" rel="noopener">' +
-                  escapeHtml(lang === "nl" ? "luister op " + source : "listen on " + source) + ' ↗' +
+                '<a class="ext-player" href="' + escapeHtml(m.link) + '" target="_blank" rel="noopener">' +
+                  (m.image ? '<img loading="lazy" src="' + escapeHtml(m.image) + '" alt="">' : '') +
+                  '<div class="ext-body">' +
+                    '<div class="ext-top">' +
+                      '<span class="ext-play" aria-hidden="true">▶</span>' +
+                      '<div style="min-width:0">' +
+                        '<div class="ext-source">' + escapeHtml(source) + '</div>' +
+                        '<div class="ext-track">' + escapeHtml(m.track || title) + '</div>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="ext-bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
+                    '<div class="ext-foot">' +
+                      escapeHtml(lang === "nl" ? "luister op " + source : "listen on " + source) + ' ↗' +
+                    '</div>' +
+                  '</div>' +
                 '</a>' +
               '</div>'
             : '<div class="embed ' + (m.size || "") + '">' +
